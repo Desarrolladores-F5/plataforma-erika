@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout (Mock) · Academia Erika Herrera</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#fff9f3;
+      --text:#2a1f1a;
+      --muted:#6b5c52;
+      --brand:#7b4a2e;
+      --brand-2:#d9b58b;
+      --brand-3:#f3e6d8;
+      --card:#ffffff;
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+      --radius: 20px;
+      --line:#e9ded5;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0}
+    body{font-family:"Quicksand",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);}
+    img{max-width:100%;display:block}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1180px;margin:0 auto;padding:0 20px}
+    .btn{display:inline-block;background:var(--brand);color:#111;padding:12px 20px;border-radius:14px;font-weight:700;box-shadow:var(--shadow);transition:.25s transform, .25s filter}
+    .btn:hover{filter:brightness(.95);transform:translateY(-1px)}
+    .btn-outline{background:transparent;border:2px solid var(--brand);color:var(--text)}
+    .card{background:var(--card);border-radius:var(--radius);padding:22px;border:1px solid var(--line);box-shadow:var(--shadow)}
+    header{position:sticky;top:0;z-index:20;backdrop-filter:saturate(140%) blur(8px);background:rgba(255,250,247,.8);border-bottom:1px solid var(--line)}
+    nav{height:64px;display:flex;align-items:center;justify-content:space-between;}
+    nav .left{display:flex;gap:12px;align-items:center}
+    nav .logo{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--brand-2));display:grid;place-items:center;color:#111;font-weight:800;box-shadow:var(--shadow)}
+    .steps{display:flex;gap:10px;align-items:center;justify-content:center;padding:16px 0;color:#666;font-weight:700}
+    .step{padding:8px 12px;border-radius:999px;background:var(--brand-3)}
+    .step.active{background:var(--brand);color:#111}
+    .grid{display:grid;gap:24px;grid-template-columns:1.6fr .9fr;align-items:start}
+    .muted{color:var(--muted)}
+    label{font-weight:700;font-size:14px}
+    input,select,textarea{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line)}
+    .line{height:1px;background:var(--line);margin:18px 0}
+    .row{display:flex;gap:12px}
+    .row>div{flex:1}
+    footer{margin-top:32px;border-top:1px solid var(--line);background:linear-gradient(90deg,var(--brand-3),#ffe9d8)}
+    .copy{font-size:13px;color:#6b7280;padding:16px 0}
+    @media (max-width: 1000px){ .grid{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        
+        <div class="left">
+          <img src="logo.png" alt="Erika Herrera" style="height:40px; width:auto; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,.08)">
+          <div class="brand" style="font-weight:700">Erika Herrera · Academia</div>
+        </div>
+    
+        <div class="muted" style="font-size:13px">Demo estática · No se realiza cobro real</div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="steps">
+    <div class="step" id="s1">1 · Carrito</div>
+    <div>›</div>
+    <div class="step" id="s2">2 · Datos</div>
+    <div>›</div>
+    <div class="step" id="s3">3 · Pago</div>
+    <div>›</div>
+    <div class="step" id="s4">4 · Confirmación</div>
+  </div>
+
+  <section class="container grid">
+    <div>
+      <!-- STEP 1: Carrito -->
+      <div id="step1" class="card">
+        <h2 style="margin:0 0 10px">Tu carrito</h2>
+        <div class="line"></div>
+        <div style="display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center">
+          <img src="https://placehold.co/120x80/ffd6ba/222" alt="Curso" style="border-radius:10px">
+          <div>
+            <div style="font-weight:700">Aprendizaje y Desarrollo Personal</div>
+            <div class="muted">Acceso 6 meses · 24 lecciones · Certificado</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-weight:800">CLP 79.990</div>
+            <button class="btn-outline" onclick="alert('Demo: eliminar del carrito');">Quitar</button>
+          </div>
+        </div>
+        <div class="line"></div>
+        <div class="row">
+          <div>
+            <label for="cupon">Cupón</label>
+            <input id="cupon" placeholder="Escribe tu cupón (demo)">
+          </div>
+          <div style="display:flex;align-items:flex-end">
+            <button class="btn" onclick="alert('Demo: cupón aplicado');">Aplicar</button>
+          </div>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+          <button class="btn btn-outline" onclick="window.location='maqueta_curso_detalle.html'">Seguir mirando</button>
+          <button class="btn" onclick="showStep(2)">Continuar</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Datos -->
+      <div id="step2" class="card" style="display:none">
+        <h2 style="margin:0 0 10px">Tus datos</h2>
+        <div class="line"></div>
+        <div class="row">
+          <div><label>Nombre y Apellido</label><input placeholder="Ej: Ana Pérez"></div>
+          <div><label>RUT (opcional)</label><input placeholder="11.111.111-1"></div>
+        </div>
+        <div class="row">
+          <div><label>Email</label><input placeholder="ana@email.com"></div>
+          <div><label>Teléfono</label><input placeholder="+56 9 1234 5678"></div>
+        </div>
+        <div style="margin-top:10px"><label>¿Deseas crear tu cuenta?</label>
+          <div class="muted" style="font-size:13px">En producción esto activará registro/login; aquí es solo maqueta.</div>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+          <button class="btn btn-outline" onclick="showStep(1)">Volver</button>
+          <button class="btn" onclick="showStep(3)">Ir a pagar</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Pago -->
+      <div id="step3" class="card" style="display:none">
+        <h2 style="margin:0 0 10px">Pago</h2>
+        <div class="line"></div>
+        <div>
+          <label>Método</label>
+          <div class="row" style="margin-top:8px">
+            <button class="btn" onclick="alert('Demo: Webpay seleccionado');">Webpay</button>
+            <button class="btn btn-outline" onclick="alert('Demo: Transferencia seleccionada');">Transferencia</button>
+          </div>
+          <div class="muted" style="margin-top:10px;font-size:13px">En la versión real te enviaremos a Webpay (Transbank) y de vuelta confirmaremos la compra.</div>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+          <button class="btn btn-outline" onclick="showStep(2)">Volver</button>
+          <button class="btn" onclick="showStep(4)">Pagar ahora (demo)</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: Confirmación -->
+      <div id="step4" class="card" style="display:none">
+        <h2 style="margin:0 0 10px">¡Compra confirmada! (Demo)</h2>
+        <div class="line"></div>
+        <p class="muted">En producción aquí verás tu número de orden, correo de confirmación y botón <strong>Ir al curso</strong> para empezar.</p>
+        <div class="row">
+          <div class="card" style="flex:1;background:#f0fff4;border-color:#c6f6d5">
+            <strong>Orden #EH-000123</strong>
+            <div class="muted">Enviamos los detalles a tu email.</div>
+          </div>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+          <a class="btn btn-outline" href="maqueta_curso_detalle.html">Volver al curso</a>
+          <button class="btn" onclick="alert('Demo: Ir al curso');">Ir al curso</button>
+        </div>
+      </div>
+    </div>
+
+    <aside>
+      <div class="card">
+        <h3 style="margin:0 0 8px">Resumen</h3>
+        <div class="line"></div>
+        <div class="row">
+          <div>Subtotal</div><div style="margin-left:auto;font-weight:700">CLP 79.990</div>
+        </div>
+        <div class="row">
+          <div>Descuento</div><div style="margin-left:auto">CLP 0</div>
+        </div>
+        <div class="line"></div>
+        <div class="row" style="align-items:center">
+          <div style="font-weight:800">Total</div><div style="margin-left:auto;font-weight:800">CLP 79.990</div>
+        </div>
+        <div class="muted" style="font-size:12px;margin-top:8px">*Valores referenciales para demo.</div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <div class="muted" style="font-size:13px">Pago seguro con Webpay (mock)</div>
+        <img src="https://placehold.co/480x150?text=Logo+Webpay+%2F+Bancos" alt="Webpay">
+      </div>
+    </aside>
+  </section>
+
+  <footer>
+    <div class="container copy">© <span id="y"></span> Erika Herrera · Demo de checkout</div>
+  </footer>
+
+  <script>
+    function markStep(n){
+      for (let i=1;i<=4;i++){ document.getElementById('s'+i).classList.remove('active'); }
+      document.getElementById('s'+n).classList.add('active');
+    }
+    function showStep(n){
+      for (let i=1;i<=4;i++){ document.getElementById('step'+i).style.display = (i===n)?'block':'none'; }
+      markStep(n);
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    showStep(1);
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

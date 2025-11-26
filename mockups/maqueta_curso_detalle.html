@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Curso · Aprendizaje y Desarrollo Personal (Mock)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#fff9f3;
+      --text:#2a1f1a;
+      --muted:#6b5c52;
+      --brand:#7b4a2e;
+      --brand-2:#d9b58b;
+      --brand-3:#f3e6d8;
+      --card:#ffffff;
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+      --radius: 20px;
+      --line:#e9ded5;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0}
+    body{font-family:"Quicksand",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);}
+    img{max-width:100%;display:block}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1180px;margin:0 auto;padding:0 20px}
+    .btn{display:inline-block;background:var(--brand);color:#111;padding:12px 20px;border-radius:14px;font-weight:700;box-shadow:var(--shadow);transition:.25s transform, .25s filter}
+    .btn:hover{filter:brightness(.95);transform:translateY(-1px)}
+    .btn-outline{background:transparent;border:2px solid var(--brand);color:var(--text)}
+    .btn-ghost{background:transparent;border:0;color:#444;font-weight:700}
+    .chip{display:inline-block;padding:6px 10px;border-radius:999px;background:var(--brand-2);margin-right:8px}
+    .card{background:var(--card);border-radius:var(--radius);padding:22px;border:1px solid var(--line);box-shadow:var(--shadow)}
+    header{position:sticky;top:0;z-index:20;backdrop-filter:saturate(140%) blur(8px);background:rgba(255,250,247,.8);border-bottom:1px solid var(--line)}
+    nav{height:64px;display:flex;align-items:center;justify-content:space-between;}
+    nav .left{display:flex;gap:12px;align-items:center}
+    nav .logo{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--brand-2));display:grid;place-items:center;color:#111;font-weight:800;box-shadow:var(--shadow)}
+    nav ul{display:flex;gap:14px;align-items:center;margin:0;padding:0;list-style:none}
+    nav li a{padding:8px 12px;border-radius:999px;background:var(--brand-3);}
+    nav li a:hover{background:var(--brand-2)}
+    nav .login{padding:10px 14px;border-radius:12px;background:var(--brand);font-weight:700;color:#111}
+    .hero{padding:26px 0}
+    .grid{display:grid;gap:28px;grid-template-columns: 1.05fr .95fr;align-items:start}
+    .hero-img{border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
+    .price{font-size:28px;font-weight:800}
+    .muted{color:var(--muted)}
+    .incluye{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+    .incluye .chip{background:#eafaf2;color:#0c5132;border:1px solid #c6f6d5}
+    .block{margin:24px 0}
+    details{border:1px solid var(--line);border-radius:14px;padding:12px 16px;background:#fff}
+    details+details{margin-top:10px}
+    summary{cursor:pointer;font-weight:700}
+    .faq details{background:#fff8f1}
+    .stars{color:#f59e0b}
+    footer{margin-top:32px;border-top:1px solid var(--line);background:linear-gradient(90deg,var(--brand-3),#ffe9d8)}
+    .footer-grid{display:grid;gap:24px;grid-template-columns:repeat(3,1fr);padding:28px 0}
+    .copy{font-size:13px;color:#6b7280;padding-bottom:18px}
+    @media (max-width: 900px){
+      .grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        
+        <div class="left">
+          <img src="logo.png" alt="Erika Herrera" style="height:40px; width:auto; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,.08)">
+          <div class="brand" style="font-weight:700">Erika Herrera · Academia</div>
+        </div>
+    
+        <ul>
+          <li><a href="#">Conóceme</a></li>
+          <li><a href="#">Contacto</a></li>
+          <li><a class="login" href="#">Tu Espacio (login)</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container grid">
+      <div class="hero-img">
+        <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80" alt="Curso">
+      </div>
+      <div>
+        <span class="chip">Curso asincrónico</span>
+        <h1 style="font-family:'Playfair Display',serif;font-size: clamp(28px, 4vw, 42px);margin:8px 0 10px">Aprendizaje y Desarrollo Personal</h1>
+        <p class="muted">Un programa práctico para fortalecer tu autoconocimiento, gestionar conversaciones y coordinar acciones con claridad.</p>
+        <div class="incluye">
+          <span class="chip">6 módulos</span>
+          <span class="chip">24 lecciones</span>
+          <span class="chip">Certificado</span>
+          <span class="chip">Acceso 6 meses</span>
+          <span class="chip">100% online</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;margin:16px 0">
+          <div class="price">CLP 79.990</div>
+          <div class="muted" style="font-size:12px">*precio referencial para demo</div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <a class="btn" href="maqueta_checkout.html">Comprar ahora</a>
+          <a class="btn btn-outline" href="#temario">Ver temario</a>
+          <button class="btn-ghost" onclick="alert('Demo: agrega al carrito');">Añadir al carrito</button>
+        </div>
+
+        <div class="block card" style="margin-top:18px">
+          <strong>Lo que te llevarás</strong>
+          <ul class="muted" style="margin:8px 0 0;padding-left:18px;list-style:disc">
+            <li>Herramientas de neurocomunicación para la vida personal y profesional.</li>
+            <li>Prácticas guiadas y recursos descargables (PDF).</li>
+            <li>Estrategias para conversaciones difíciles y hábitos sostenibles.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="temario" class="container">
+    <h2 style="font-size:24px;margin-bottom:10px">Temario del curso</h2>
+    <details open>
+      <summary>Módulo 1 · Introducción al cambio (4 lecciones)</summary>
+      <ul class="muted" style="margin:8px 0 0;padding-left:18px;list-style:disc">
+        <li>Bienvenida y objetivos</li><li>Mindset de aprendizaje</li><li>Mapa vs. territorio</li><li>Plan personal</li>
+      </ul>
+    </details>
+    <details>
+      <summary>Módulo 2 · Neurocomunicación aplicada (5 lecciones)</summary>
+      <ul class="muted" style="margin:8px 0 0;padding-left:18px;list-style:disc">
+        <li>Lenguaje y emoción</li><li>Escucha activa</li><li>Asertividad</li><li>Feedback efectivo</li><li>Prácticas</li>
+      </ul>
+    </details>
+    <details>
+      <summary>Módulo 3 · Herramientas y hábitos (4 lecciones)</summary>
+      <ul class="muted" style="margin:8px 0 0;padding-left:18px;list-style:disc">
+        <li>Gestión de hábitos</li><li>Acción y coordinación</li><li>Conversaciones difíciles</li><li>Plan 30 días</li>
+      </ul>
+    </details>
+    <details>
+      <summary>Módulo 4 · Liderazgo consciente (4 lecciones)</summary>
+      <ul class="muted" style="margin:8px 0 0;padding-left:18px;list-style:disc">
+        <li>Estilos de liderazgo</li><li>Confianza y compromiso</li><li>Delegación</li><li>Revisión</li>
+      </ul>
+    </details>
+    <details>
+      <summary>Módulo 5 · Prácticas integradas (4 lecciones)</summary>
+      <ul class="muted" style="margin:8px 0 0;padding-left:18px;list-style:disc">
+        <li>Ejercicios guiados</li><li>Autoevaluación</li><li>Estudio de caso</li><li>Reflexión</li>
+      </ul>
+    </details>
+    <details>
+      <summary>Módulo 6 · Proyecto y cierre (3 lecciones)</summary>
+      <ul class="muted" style="margin:8px 0 0;padding-left:18px;list-style:disc">
+        <li>Proyecto personal</li><li>Checklist de implementación</li><li>Cierre y próximos pasos</li>
+      </ul>
+    </details>
+  </section>
+
+  <section class="container block">
+    <div class="card" style="display:grid;grid-template-columns:1fr 2fr;gap:20px;align-items:center">
+      <img src="https://placehold.co/500x500" alt="Erika" style="border-radius:14px">
+      <div>
+        <h3 style="margin:0 0 6px">Tu instructora: Erika Herrera</h3>
+        <p class="muted">Coach y Trainer en PNL, especializada en Neurocomunicación. 25+ años acompañando a personas y equipos en procesos de cambio.</p>
+        <div style="margin-top:10px">
+          <span class="chip">PNL</span>
+          <span class="chip">Liderazgo</span>
+          <span class="chip">Equipos</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container block">
+    <h3 style="font-size:20px;margin-bottom:8px">Opiniones</h3>
+    <div style="display:grid;gap:16px;grid-template-columns:repeat(3,1fr)">
+      <div class="card"><div style="color:#f59e0b">★★★★★</div><div class="muted">“Me ayudó a conversar mejor con mi equipo.”</div></div>
+      <div class="card"><div style="color:#f59e0b">★★★★★</div><div class="muted">“Contenido claro y práctico, lo apliqué de inmediato.”</div></div>
+      <div class="card"><div style="color:#f59e0b">★★★★☆</div><div class="muted">“Buen ritmo y muy humana la guía.”</div></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container" style="padding:20px 0">
+      <div class="muted" style="font-size:13px">Demo estática · No se realiza cobro real</div>
+    </div>
+  </footer>
+</body>
+</html>

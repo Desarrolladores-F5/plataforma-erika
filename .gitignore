@@ -1,0 +1,42 @@
+# --- Dependencias / build
+/node_modules/
+/vendor/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Entorno / credenciales
+.env
+.env.*.local
+.env.local
+/.idea/
+/.vscode/*
+!.vscode/extensions.json
+
+# --- Laravel (cuando lo creemos)
+storage/*.key
+storage/logs/
+storage/framework/cache/**
+storage/framework/sessions/**
+storage/framework/views/**
+storage/app/*
+!storage/app/public/.gitkeep
+/public/storage
+
+# --- SO/Editor
+.DS_Store
+Thumbs.db
+
+# --- Artefactos temporales
+*.log
+*.tmp
+
+# --- Cobertura/tests (si se usan)
+coverage/
+.phpunit.result.cache
+
+# --- Nuestro proyecto actual
+# (Queremos versionar CSV y SQL, así que NO los ignores)
+# contenido/csv/*.csv        <-- mantener versionado
+# db/*.sql                   <-- mantener versionado
