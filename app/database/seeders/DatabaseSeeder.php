@@ -13,7 +13,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Si en el futuro agregas más seeders, los vas sumando en este array
-        $this->call(AdminUserSeeder::class);           
+        $this->call(AdminUserSeeder::class);
+        $this->call(DemoCourseSeeder::class); // Agregamos el Demo del curso
+           
         
     }
 }

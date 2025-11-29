@@ -34,7 +34,11 @@ Route::get('/curso/detalle', function () {
 
 // ⭐ dashboard protegido por login + verificación
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    if (auth()->user()->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+
+    return app(\App\Http\Controllers\StudentDashboardController::class)->index();
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // ⭐ Panel de administración (solo Erika)

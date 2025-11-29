@@ -12,8 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // Agregamos la columna "role" después del email
-            $table->string('role')->default('user')->after('email');
+            // Solo agregar la columna si NO existe
+            if (!Schema::hasColumn('users', 'role')) {
+                $table->string('role')->default('user')->after('email');
+            }
         });
     }
 
@@ -23,8 +25,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // Si hacemos rollback, eliminamos la columna "role"
-            $table->dropColumn('role');
+            if (Schema::hasColumn('users', 'role')) {
+                $table->dropColumn('role');
+            }
         });
     }
 };
