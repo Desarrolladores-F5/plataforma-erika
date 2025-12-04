@@ -138,7 +138,7 @@
                         {{ $course->description }}
                     </p>
 
-                    <a href="{{ route('curso.detalle') }}" class="btn">
+                    <a href="{{ route('curso.detalle', $course->slug) }}" class="btn-primario">
                         Ver Curso →
                     </a>
                 </div>

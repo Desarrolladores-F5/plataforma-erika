@@ -6,31 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
+        // Si la tabla ya existe, no hacemos nada en migraciones normales
+        if (Schema::hasTable('lessons')) {
+            return;
+        }
 
         Schema::create('lessons', function (Blueprint $table) {
             $table->id();
-            
-            // Cada lección pertenece a un módulo
-            $table->foreignId('module_id')
-                  ->constrained('modules')
-                  ->onDelete('cascade');
-
+            $table->foreignId('module_id')->constrained()->onDelete('cascade');
             $table->string('title');
-            $table->string('video_url')->nullable();
             $table->integer('order')->default(1);
-                
+            $table->string('video_url')->nullable();
+            $table->text('content')->nullable();
+            $table->boolean('is_preview')->default(false);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('lessons');

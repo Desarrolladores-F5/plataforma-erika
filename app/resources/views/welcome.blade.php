@@ -315,10 +315,10 @@
 
         <!-- Botones grandes al estilo maqueta -->
         <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
-          <a class="btn" href="{{ route('curso.detalle') }}">
+          <a class="btn" href="{{ route('curso.detalle', 'autoconocimiento-bienestar-demo') }}">
             Acceder / Comprar (demo)
           </a>
-          <a class="btn btn-outline" href="{{ route('curso.detalle') }}#temario">
+          <a class="btn btn-outline" href="{{ route('curso.detalle', 'autoconocimiento-bienestar-demo') }}#temario">
             Ver temario
           </a>
         </div>
