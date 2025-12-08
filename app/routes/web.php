@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\StudentDashboardController;
+use App\Http\Controllers\WebpayController; // 👈 FALTABA ESTA
 
 // ⭐ Home pública
 Route::get('/', function () {
@@ -22,6 +23,16 @@ Route::get('/mi-espacio', function () {
         : redirect()->route('dashboard');
 
 })->name('mi.espacio');
+
+// ⭐ Iniciar compra
+Route::get('/comprar/{slug}', [CourseController::class, 'iniciarCompra'])
+    ->name('checkout.iniciar');
+
+// ⭐ Webpay: iniciar transacción real 👇
+Route::get('/pagar/{slug}', [WebpayController::class, 'iniciar'])
+    ->middleware('auth')
+    ->name('webpay.iniciar');
+
 
 // ⭐ Página pública del curso
 Route::get('/curso/{slug}', [CourseController::class, 'show'])
@@ -45,6 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
 
 // ⭐ Breeze (auth)
 require __DIR__.'/auth.php';

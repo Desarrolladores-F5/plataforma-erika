@@ -17,13 +17,33 @@ class CourseController extends Controller
             ->with(['modules.lessons'])
             ->firstOrFail();
 
-        // (Opcional) Si quieres, aquí podríamos validar que el usuario tenga acceso
-        // $user = auth()->user();
-        // if (! $user || ! $user->courses->contains($course->id)) {
-        //     abort(403, 'No tienes acceso a este curso.');
-        // }
-
-        // Pasamos el curso a la vista que ya teníamos
-        return view('curso_detalle', compact('course'));
+        // Vista del alumno, dentro de /views/student
+        return view('student.curso_detalle', compact('course'));
     }
+
+    public function iniciarCompra($slug)
+    {
+        $course = Course::where('slug', $slug)->firstOrFail();
+
+        // Si NO está logueado → enviarlo al registro
+        if (!auth()->check()) {
+            // Opcional: guardar a dónde volver después
+            session(['redirect_after_register' => route('checkout.iniciar', $slug)]);
+
+            return redirect()->route('register');
+        }
+
+        // 🔥 TEMPORALMENTE DESACTIVADO
+        // Más adelante, cuando tengamos pagos reales, lo activamos de nuevo
+        /*
+        if ($course->users()->where('user_id', auth()->id())->exists()) {
+            // Ya lo tiene comprado → al curso
+            return redirect()->route('curso.detalle', $slug);
+        }
+        */
+
+        // Usuario logueado y sin compra registrada → mostrar checkout
+        return view('checkout.index', compact('course'));
+    }
+
 }

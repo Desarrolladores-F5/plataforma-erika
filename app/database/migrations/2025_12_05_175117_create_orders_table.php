@@ -1,0 +1,43 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('orders', function (Blueprint $table) {
+            $table->id();
+
+            // Alumno que compra
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+
+            // Curso comprado
+            $table->foreignId('course_id')->constrained()->onDelete('cascade');
+
+            // Monto pagado
+            $table->integer('amount');
+
+            // Identificadores de Webpay
+            $table->string('buy_order');
+            $table->string('session_id');
+            $table->string('token')->nullable();
+
+            // Estados posibles
+            $table->enum('status', [
+                'pendiente',
+                'pagado',
+                'fallido'
+            ])->default('pendiente');
+
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('orders');
+    }
+};

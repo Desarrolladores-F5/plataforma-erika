@@ -302,7 +302,9 @@
         </div>
 
         <div style="display:flex;gap:12px;flex-wrap:wrap">
-          <a class="btn" href="{{ route('login') }}">Acceder / Comprar (demo)</a>
+          <a class="btn" href="{{ route('checkout.iniciar', $course->slug) }}">
+            Acceder / Comprar
+          </a>
           <a class="btn btn-outline" href="#temario">Ver temario</a>
           <button class="btn-ghost" onclick="alert('Demo: aquí iría el carrito en la versión final');">
             Añadir al carrito
