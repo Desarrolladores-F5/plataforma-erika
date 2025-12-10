@@ -43,7 +43,7 @@ class CourseController extends Controller
         */
 
         // Usuario logueado y sin compra registrada → mostrar checkout
-        return view('checkout.index', compact('course'));
+        return view('webpay.iniciar', compact('course'));
     }
 
 }

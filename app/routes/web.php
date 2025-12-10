@@ -25,14 +25,18 @@ Route::get('/mi-espacio', function () {
 })->name('mi.espacio');
 
 // ⭐ Iniciar compra
-Route::get('/comprar/{slug}', [CourseController::class, 'iniciarCompra'])
+Route::get('/pagar/{slug}', [CourseController::class, 'iniciarCompra'])
+    ->middleware('auth')
     ->name('checkout.iniciar');
 
 // ⭐ Webpay: iniciar transacción real 👇
-Route::get('/pagar/{slug}', [WebpayController::class, 'iniciar'])
+Route::post('/pagar/{slug}', [WebpayController::class, 'iniciar'])   // aca cambiamos de get a
     ->middleware('auth')
     ->name('webpay.iniciar');
 
+// URL de retorno desde Webpay
+Route::post('/webpay/retorno', [WebpayController::class, 'retorno'])
+    ->name('webpay.retorno');
 
 // ⭐ Página pública del curso
 Route::get('/curso/{slug}', [CourseController::class, 'show'])
