@@ -35,7 +35,7 @@ Route::post('/pagar/{slug}', [WebpayController::class, 'iniciar'])   // aca camb
     ->name('webpay.iniciar');
 
 // URL de retorno desde Webpay
-Route::post('/webpay/retorno', [WebpayController::class, 'retorno'])
+Route::match(['GET', 'POST'], '/webpay/retorno', [WebpayController::class, 'retorno'])
     ->name('webpay.retorno');
 
 // ⭐ Página pública del curso

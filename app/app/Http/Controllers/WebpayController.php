@@ -11,7 +11,7 @@ use Transbank\Webpay\Options;
 class WebpayController extends Controller
 {
     public function iniciar(Request $request, string $slug)
-     {
+    {
         $course = Course::where('slug', $slug)->firstOrFail();
         $user   = auth()->user();
 
@@ -50,6 +50,50 @@ class WebpayController extends Controller
 
         // 6) Redirigir al formulario Webpay
         return redirect($response->getUrl() . '?token_ws=' . $response->getToken());
+    }
+
+    public function retorno(Request $request)
+    {
+        $token = $request->input('token_ws');
+
+        if (!$token) {
+            return redirect()->route('home')->with('error', 'Token no recibido desde Webpay.');
+        }
+
+        // 1) Buscar la orden asociada al token
+        $order = Order::where('token', $token)->first();
+
+        if (!$order) {
+            return redirect()->route('home')->with('error', 'Orden no encontrada.');
+        }
+
+        // 2) Preparar OPTIONS igual que antes
+        $options = new Options(
+            apiKey: config('webpay.api_key'),
+            commerceCode: config('webpay.commerce_code'),
+            integrationType: Options::ENVIRONMENT_INTEGRATION
+        );
+
+        // 3) Confirmar transacción
+        $transaction = new Transaction($options);
+
+        $response = $transaction->commit($token);
+
+        // 4) Registrar estado
+        $order->status = $response->isApproved() ? 'pagado' : 'rechazado';
+        $order->save();
+
+        // 5) Si fue aprobado → asociar curso al usuario
+        if ($response->isApproved()) {
+            $user = $order->user;
+            $user->courses()->attach($order->course_id);
+        }
+
+        // 6) Mostrar voucher
+        return view('webpay.voucher', [
+            'order'    => $order,
+            'response' => $response,
+        ]);
     }
         
 }
