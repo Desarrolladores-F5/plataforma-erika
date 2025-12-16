@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@media print {
+  /* Oculta elementos del layout + cualquier cosa con class="print:hidden" */
+  header, nav, footer, .print\:hidden {
+    display: none !important;
+  }
+
+  /* Fondo blanco al imprimir */
+  body {
+    background: white !important;
+  }
+
+  /* Márgenes del PDF/impresión */
+  @page {
+    margin: 12mm;
+  }
+
+  /* Quita sombras en impresión (opcional pero recomendado) */
+  .shadow, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl {
+    box-shadow: none !important;
+  }
+}

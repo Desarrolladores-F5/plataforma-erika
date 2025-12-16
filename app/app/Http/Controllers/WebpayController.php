@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Course;
 use Transbank\Webpay\WebpayPlus\Transaction;
 use Transbank\Webpay\Options;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class WebpayController extends Controller
 {
@@ -94,6 +95,31 @@ class WebpayController extends Controller
             'order'    => $order,
             'response' => $response,
         ]);
+    }
+
+    public function show(Order $order)
+    {
+        // Seguridad: solo el dueño
+        abort_if($order->user_id !== auth()->id(), 403);
+
+        // 🚫 Si NO está pagado → no se intenta commit
+        if ($order->status !== 'pagado') {
+            return view('orders.pending', compact('order'));
+        }
+
+        return view('orders.voucher', compact('order'));
+    }    
+
+    public function pdf(Order $order)
+    {
+        // 🔒 Seguridad: solo dueño o admin
+        if ($order->user_id !== auth()->id() && auth()->user()->role !== 'admin') {
+            abort(403);
+        }
+
+        $pdf = Pdf::loadView('orders.pdf', compact('order'));
+
+        return $pdf->download('comprobante-'.$order->buy_order.'.pdf');
     }
         
 }

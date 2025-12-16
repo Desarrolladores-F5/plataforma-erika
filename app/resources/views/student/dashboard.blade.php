@@ -113,6 +113,7 @@
         <div>
             <span>{{ auth()->user()->name }}</span>
             <a href="{{ route('profile.edit') }}">Perfil</a>
+            <a href="{{ route('orders.index') }}"class="inline-block mt-4 text-indigo-600 hover:underline">📄 Ver historial de compras</a>
             <a href="{{ route('logout') }}"
                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                Cerrar sesión

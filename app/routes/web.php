@@ -47,6 +47,22 @@ Route::get('/dashboard', [StudentDashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+// ⭐ Historial de compras (vouchers)
+Route::get('/mis-compras', function () {
+    $orders = auth()->user()
+        ->orders()
+        ->with('course')
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return view('orders.index', compact('orders'));
+})->middleware('auth')->name('orders.index');
+
+// ✅ PDF del voucher (PRO)
+Route::get('/orders/{order}/pdf', [WebpayController::class, 'pdf'])
+    ->middleware('auth')
+    ->name('orders.pdf');
+
 // ⭐ Panel admin
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin', function () {

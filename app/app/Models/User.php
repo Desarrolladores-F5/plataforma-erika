@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Order;            //NUEVO
+
 
 class User extends Authenticatable
 {
@@ -70,4 +72,11 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Course::class);
     }
+
+    // Un usuario puede tener muchas órdenes
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
 }
