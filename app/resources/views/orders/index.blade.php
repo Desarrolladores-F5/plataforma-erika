@@ -44,7 +44,7 @@
                             </td>
 
                             <td class="px-4 py-3 text-center">
-                                <a href="{{ route('webpay.retorno', ['token_ws' => $order->token]) }}"
+                                <a href="{{ route('orders.show', $order) }}"
                                    class="text-indigo-600 hover:underline">
                                     Ver voucher
                                 </a>

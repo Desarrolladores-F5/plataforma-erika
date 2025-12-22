@@ -29,7 +29,7 @@ return new class extends Migration
             $table->enum('status', [
                 'pendiente',
                 'pagado',
-                'fallido'
+                'rechazado'
             ])->default('pendiente');
 
             $table->timestamps();

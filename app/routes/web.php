@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\WebpayController; // 👈 FALTABA ESTA
+use App\Http\Controllers\AdminController;   // 👈 NUEVO
+use App\Http\Controllers\Admin\AdminOrderController;
+use App\Http\Controllers\Admin\AdminStudentController;
+
 
 // ⭐ Home pública
 Route::get('/', function () {
@@ -42,10 +46,19 @@ Route::match(['GET', 'POST'], '/webpay/retorno', [WebpayController::class, 'reto
 Route::get('/curso/{slug}', [CourseController::class, 'show'])
     ->name('curso.detalle');
 
-// ⭐ Dashboard de alumno
-Route::get('/dashboard', [StudentDashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+// ⭐ Dashboard inteligente (admin / alumno)
+Route::get('/dashboard', function () {
+
+    $user = auth()->user();
+
+    if ($user->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+
+    return app(\App\Http\Controllers\StudentDashboardController::class)->index();
+
+})->middleware(['auth', 'verified'])
+  ->name('dashboard');
 
 // ⭐ Historial de compras (vouchers)
 Route::get('/mis-compras', function () {
@@ -58,17 +71,38 @@ Route::get('/mis-compras', function () {
     return view('orders.index', compact('orders'));
 })->middleware('auth')->name('orders.index');
 
+// ⭐ Historial de compras para que no se dupliquen los cursos al ir al Voucher
+Route::get('/orders/{order}', [WebpayController::class, 'show'])
+    ->middleware('auth')
+    ->name('orders.show');
+
 // ✅ PDF del voucher (PRO)
 Route::get('/orders/{order}/pdf', [WebpayController::class, 'pdf'])
     ->middleware('auth')
     ->name('orders.pdf');
 
 // ⭐ Panel admin
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
-});
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->group(function () {
+
+        // Dashboard
+        Route::get('/', [AdminController::class, 'index'])
+            ->name('admin.dashboard');
+
+        // Órdenes / Pagos
+        Route::get('/ordenes', [AdminOrderController::class, 'index'])
+            ->name('admin.orders.index');
+
+        // Actualizar estado de orden
+        Route::patch('/ordenes/{order}', [AdminOrderController::class, 'update'])
+            ->name('admin.orders.update');
+
+        // Alumnos
+        Route::get('/alumnos', [AdminStudentController::class, 'index'])
+            ->name('admin.students.index');
+
+    });
 
 // ⭐ Perfil
 Route::middleware('auth')->group(function () {

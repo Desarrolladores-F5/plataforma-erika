@@ -107,7 +107,7 @@ class WebpayController extends Controller
             return view('orders.pending', compact('order'));
         }
 
-        return view('orders.voucher', compact('order'));
+        return view('webpay.voucher', compact('order'));
     }    
 
     public function pdf(Order $order)
