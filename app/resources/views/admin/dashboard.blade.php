@@ -51,17 +51,25 @@
             </div>
 
             {{-- ACCIONES ADMIN --}}
-            <div class="flex flex-wrap gap-4 mt-8 mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 mb-12">
+
                 <a href="{{ route('admin.orders.index') }}"
-                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white border border-orange-300 text-orange-700 font-semibold shadow hover:bg-orange-50 transition">       
+                class="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-white border border-orange-300 text-orange-700 font-semibold shadow hover:bg-orange-50 transition">
                     🧾 Gestionar órdenes
                 </a>
 
                 <a href="{{ route('admin.students.index') }}"
-                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white border border-orange-300 text-orange-700 font-semibold shadow hover:bg-orange-50 transition">                       
+                class="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-white border border-orange-300 text-orange-700 font-semibold shadow hover:bg-orange-50 transition">
                     👥 Ver alumnos
                 </a>
+
+                <a href="{{ route('admin.courses.index') }}"
+                class="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-white border border-orange-300 text-orange-700 font-semibold shadow hover:bg-orange-50 transition">
+                    📚 Gestionar cursos
+                </a>
+
             </div>
+
 
             <div class="h-px bg-orange-200/60"></div>
             

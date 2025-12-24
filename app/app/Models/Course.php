@@ -14,7 +14,7 @@ class Course extends Model
         'slug',
         'description',
         'price',
-        'is_active',
+        'is_published',
     ];
 
     // Un curso tiene muchos módulos

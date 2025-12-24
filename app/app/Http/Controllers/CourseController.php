@@ -46,4 +46,63 @@ class CourseController extends Controller
         return view('webpay.iniciar', compact('course'));
     }
 
+    // -------------------------
+    // ADMIN: CRUD de Cursos
+    // -------------------------
+
+    public function index()
+    {
+        $courses = Course::orderBy('created_at', 'desc')->get();
+        return view('admin.courses.index', compact('courses'));
+    }
+
+    public function create()
+    {
+        return view('admin.courses.create');
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'title'       => 'required|string|max:255',
+            'slug'        => 'required|string|max:255|unique:courses,slug',
+            'description' => 'nullable|string',
+            'price'       => 'nullable|numeric|min:0',
+            'is_published'   => 'nullable|boolean',
+        ]);
+
+        // Si no viene checkbox, que sea 0
+        $data['is_published'] = $request->boolean('is_published');
+
+        Course::create($data);
+
+        return redirect()
+            ->route('admin.courses.index')
+            ->with('success', 'Curso creado correctamente ✅');
+    }
+
+    public function edit(Course $course)
+    {
+        return view('admin.courses.edit', compact('course'));
+    }
+
+    public function update(Request $request, Course $course)
+    {
+        $data = $request->validate([
+            'title'       => 'required|string|max:255',
+            'slug'        => 'required|string|max:255|unique:courses,slug,' . $course->id,
+            'description' => 'nullable|string',
+            'price'       => 'nullable|numeric|min:0',
+            'is_published'   => 'nullable|boolean',
+        ]);
+
+        $data['is_published'] = $request->boolean('is_published');
+
+        $course->update($data);
+
+        return redirect()
+            ->route('admin.courses.index')
+            ->with('success', 'Curso actualizado correctamente ✅');
+    }
+
 }

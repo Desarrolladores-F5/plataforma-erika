@@ -102,6 +102,22 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/alumnos', [AdminStudentController::class, 'index'])
             ->name('admin.students.index');
 
+        // Cursos (CRUD)
+        Route::get('/cursos', [CourseController::class, 'index'])
+            ->name('admin.courses.index');
+
+        Route::get('/cursos/crear', [CourseController::class, 'create'])
+            ->name('admin.courses.create');
+
+        Route::post('/cursos', [CourseController::class, 'store'])
+            ->name('admin.courses.store');
+
+        Route::get('/cursos/{course}/editar', [CourseController::class, 'edit'])
+            ->name('admin.courses.edit');
+
+        Route::put('/cursos/{course}', [CourseController::class, 'update'])
+            ->name('admin.courses.update');
+
     });
 
 // ⭐ Perfil
