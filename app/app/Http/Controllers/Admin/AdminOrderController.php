@@ -46,7 +46,10 @@ class AdminOrderController extends Controller
 
         return redirect()
             ->route('admin.orders.index')
-            ->with('success', 'Estado de la orden actualizado correctamente.');
+            ->with('toast', [
+                'type' => 'success',
+                'message' => 'Estado de la orden actualizado correctamente.'
+            ]); 
     }
     
 }

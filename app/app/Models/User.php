@@ -6,11 +6,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\Order;            //NUEVO
+use App\Models\Course;
 
 
 class User extends Authenticatable
 {
+    // ✅ Roles del sistema (valores técnicos en DB)
+    public const ROLE_ADMIN   = 'admin';
+    public const ROLE_STUDENT = 'student';   
+    
+    
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
@@ -36,7 +41,7 @@ class User extends Authenticatable
         // identidad/rol
         'rut',
         'rut_verified',
-        'role',          // 'admin' | 'alumno'
+        'role',          // 'admin' | 'student'
 
         // verificación/cookies
         'email_verified_at',
@@ -77,6 +82,16 @@ class User extends Authenticatable
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function isStudent()
+    {
+        return $this->role === self::ROLE_STUDENT;
     }
 
 }

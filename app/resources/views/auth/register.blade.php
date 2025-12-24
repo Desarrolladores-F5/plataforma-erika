@@ -16,6 +16,41 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
+        {{-- GÉNERO --}}
+        <div class="mt-4">
+            <x-input-label for="gender" value="Género" />
+            <select id="gender" name="gender"
+                    class="block mt-1 w-full rounded-md border-gray-300
+                        focus:border-orange-500 focus:ring-orange-500">
+                <option value="">Selecciona género</option>
+                <option value="masculino" {{ old('gender') === 'masculino' ? 'selected' : '' }}>Masculino</option>
+                <option value="femenino" {{ old('gender') === 'femenino' ? 'selected' : '' }}>Femenino</option>
+                <option value="otro" {{ old('gender') === 'otro' ? 'selected' : '' }}>Otro</option>
+            </select>
+        </div>
+
+        {{-- FECHA NACIMIENTO --}}
+        <div class="mt-4">
+            <x-input-label for="birth_date" value="Fecha de nacimiento" />
+            <x-text-input id="birth_date"
+                        class="block mt-1 w-full"
+                        type="date"
+                        name="birth_date"
+                        value="{{ old('birth_date') }}" />
+        </div>
+
+        {{-- COMUNA --}}
+        <div class="mt-4">
+            <x-input-label for="comuna" value="Comuna / Ciudad" />
+            <x-text-input id="comuna"
+                        class="block mt-1 w-full"
+                        type="text"
+                        name="comuna"
+                        value="{{ old('comuna') }}"
+                        placeholder="Ej: Santiago" />
+        </div>
+
+
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />

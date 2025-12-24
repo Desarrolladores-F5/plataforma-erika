@@ -92,6 +92,67 @@
                 </div>
             </div>
 
+
+            {{-- 📊 Ventas por día --}}
+            <div class="bg-white rounded-xl shadow-sm border border-orange-100 p-6 mt-8">
+                <h3 class="text-lg font-semibold text-orange-800 mb-4">
+                    📊 Ventas por día (últimos 7 días)
+                </h3>
+
+                @if($ventasPorDia->isEmpty())
+                    <p class="text-sm text-gray-500">
+                        Aún no hay ventas registradas.
+                    </p>
+                @else
+                    <table class="min-w-full text-sm">
+                        <thead class="bg-orange-50 text-gray-700 uppercase">
+                            <tr>
+                                <th class="px-4 py-2 text-left">Fecha</th>
+                                <th class="px-4 py-2 text-right">Total vendido</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($ventasPorDia as $venta)
+                                <tr class="border-t">
+                                    <td class="px-4 py-2">
+                                        {{ \Carbon\Carbon::parse($venta->fecha)->format('d-m-Y') }}
+                                    </td>
+                                    <td class="px-4 py-2 text-right font-semibold text-green-700">
+                                        ${{ number_format($venta->total, 0, ',', '.') }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
+            </div>
+
+
+            {{-- 📊 Ventas por mes --}}
+            <div class="bg-white rounded-xl shadow-sm border border-orange-100 p-6 mt-8">
+                <h3 class="text-lg font-semibold text-orange-800 mb-4">
+                    📆 Ventas por mes
+                </h3>
+
+                @if($ventasPorMes->isEmpty())
+                    <p class="text-sm text-gray-500">
+                        Aún no hay ventas mensuales.
+                    </p>
+                @else
+                    <div class="w-full">
+                        <canvas id="chartVentasPorMes" height="90"></canvas>
+                    </div>
+                @endif
+            </div>
+
+            {{-- Alumnos Activos --}}
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-orange-100">
+                <p class="text-sm text-gray-500">Alumnos activos</p>
+                <p class="text-2xl font-bold mt-2 text-green-700">
+                    {{ $alumnosActivos ?? 0 }}
+                </p>
+            </div>
+
             <div class="h-px bg-orange-200/60"></div>
 
             {{-- ÚLTIMAS ÓRDENES --}}
@@ -153,4 +214,45 @@
 
         </div>
     </div>
+
+    @push('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script>
+            const ventasMesLabels = @json($ventasPorMes->pluck('mes'));
+            const ventasMesTotales = @json($ventasPorMes->pluck('total'));
+
+            // Si tus meses vienen como "2025-12", los mostramos bonito:
+            const prettyLabels = ventasMesLabels.map(m => {
+                const [y, mm] = m.split('-');
+                return `${mm}/${y}`;
+            });
+
+            const ctx = document.getElementById('chartVentasPorMes');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: prettyLabels,
+                        datasets: [{
+                            label: 'Total vendido',
+                            data: ventasMesTotales
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: (value) => '$' + value.toLocaleString('es-CL')
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        </script>
+    @endpush
 </x-app-layout>

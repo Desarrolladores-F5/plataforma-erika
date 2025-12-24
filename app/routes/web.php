@@ -81,8 +81,8 @@ Route::get('/orders/{order}/pdf', [WebpayController::class, 'pdf'])
     ->middleware('auth')
     ->name('orders.pdf');
 
-// ⭐ Panel admin
-Route::middleware(['auth', 'admin'])
+// ⭐ PANEL ADMIN (🔥 PROTEGIDO POR ROL 🔥)
+Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
     ->group(function () {
 
