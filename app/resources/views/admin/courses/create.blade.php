@@ -14,7 +14,10 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('admin.courses.store') }}" class="space-y-4">
+    <form method="POST" 
+          action="{{ route('admin.courses.store') }}" 
+          enctype="multipart/form-data" 
+          class="space-y-4">
         @csrf
 
         <div>
@@ -40,6 +43,31 @@
             <label class="block font-medium mb-1">Precio</label>
             <input type="number" step="0.01" name="price" value="{{ old('price', 0) }}"
                    class="w-full border rounded p-2">
+        </div>
+
+        {{-- Video promocional --}}
+        <div>
+            <label class="block font-medium mb-1">Video promocional (URL)</label>
+            <input type="url" name="promo_video_url"
+                value="{{ old('promo_video_url') }}"
+                class="w-full border rounded p-2"
+                placeholder="https://www.youtube.com/watch?v=...">
+        </div>
+
+        {{-- Thumbnail --}}
+        <div>
+            <label class="block font-medium mb-1">Imagen del curso (thumbnail)</label>
+            <input type="file" name="thumbnail"
+                class="w-full border rounded p-2"
+                accept="image/*">
+        </div>
+
+        {{-- Banner --}}
+        <div>
+            <label class="block font-medium mb-1">Banner del curso (opcional)</label>
+            <input type="file" name="banner_url"
+                class="w-full border rounded p-2"
+                accept="image/*">
         </div>
 
         <div class="flex items-center gap-2">

@@ -118,6 +118,9 @@ Route::middleware(['auth', 'role:admin'])
         Route::put('/cursos/{course}', [CourseController::class, 'update'])
             ->name('admin.courses.update');
 
+        Route::delete('/cursos/{course}', [CourseController::class, 'destroy'])
+            ->name('admin.courses.destroy');
+
     });
 
 // ⭐ Perfil

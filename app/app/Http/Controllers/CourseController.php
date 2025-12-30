@@ -63,13 +63,41 @@ class CourseController extends Controller
 
     public function store(Request $request)
     {
+        // 1️⃣ Validación
         $data = $request->validate([
             'title'       => 'required|string|max:255',
             'slug'        => 'required|string|max:255|unique:courses,slug',
             'description' => 'nullable|string',
             'price'       => 'nullable|numeric|min:0',
+            'promo_video_url' => 'nullable|url',                 // Nuevo
+            'thumbnail' => 'nullable|image|max:2048',            // Nuevo
+            'banner_url' => 'nullable|image|max:4096',           // Nuevo
             'is_published'   => 'nullable|boolean',
+
         ]);
+
+        // 2️⃣ Guardar archivos (SI existen)
+        if ($request->hasFile('thumbnail')) {
+            $data['thumbnail'] = $request->file('thumbnail')
+                ->store('courses/thumbnails', 'public');
+        }
+
+        if ($request->hasFile('banner_url')) {
+            $data['banner_url'] = $request->file('banner_url')
+                ->store('courses/banners', 'public');
+        }
+
+        // 3️⃣ Checkbox publicado
+        $data['is_published'] = $request->boolean('is_published');
+
+        // 4️⃣ Crear curso
+        Course::create($data);
+
+        // 5️⃣ Redirigir
+        return redirect()
+            ->route('admin.courses.index')
+            ->with('success', 'Curso creado correctamente ✅');
+
 
         // Si no viene checkbox, que sea 0
         $data['is_published'] = $request->boolean('is_published');
@@ -103,6 +131,24 @@ class CourseController extends Controller
         return redirect()
             ->route('admin.courses.index')
             ->with('success', 'Curso actualizado correctamente ✅');
+    }
+
+    public function destroy(Course $course)
+    {
+        // (opcional) borrar imágenes asociadas
+        if ($course->thumbnail) {
+            \Storage::disk('public')->delete($course->thumbnail);
+        }
+
+        if ($course->banner_url) {
+            \Storage::disk('public')->delete($course->banner_url);
+        }
+
+        $course->delete();
+
+        return redirect()
+            ->route('admin.courses.index')
+            ->with('success', 'Curso eliminado correctamente 🗑️');
     }
 
 }

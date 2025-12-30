@@ -15,6 +15,9 @@ class Course extends Model
         'description',
         'price',
         'is_published',
+        'thumbnail',            // Nuevo
+        'banner_url',           // Nuevo
+        'promo_video_url',      // Nuevo
     ];
 
     // Un curso tiene muchos módulos
