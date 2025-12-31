@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Curso · Aprendizaje y Desarrollo Personal</title>
+  <title>Curso · {{ $course->title }}</title>                     
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -276,20 +276,23 @@
   <section class="hero">
     <div class="container grid">
       <div class="hero-img">
-        <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80" alt="Curso">
+        @if($course->thumbnail)
+          <img src="{{ asset('storage/'.$course->thumbnail) }}" alt="{{ $course->title }}">
+        @else
+          <img src="https://placehold.co/1400x900?text=Curso" alt="Curso">
+        @endif
       </div>
       <div>
         <span class="chip">Curso asincrónico</span>
         <h1 style="font-family:'Playfair Display',serif;font-size: clamp(28px, 4vw, 42px);margin:8px 0 10px">
-          Aprendizaje y Desarrollo Personal
+          {{ $course->title }}
         </h1>
         <p class="muted">
-          Un programa práctico para fortalecer tu autoconocimiento, gestionar conversaciones y
-          coordinar acciones con claridad.
+          {{ $course->description }}
         </p>
 
         <div class="incluye">
-          <span class="chip">3 módulos</span>
+          <span class="chip">{{ $course->modules->count() }} módulos</span>
           <span class="chip">Contenido en video</span>
           <span class="chip">Certificado</span>
           <span class="chip">Acceso 6 meses</span>
@@ -297,8 +300,9 @@
         </div>
 
         <div style="display:flex;align-items:center;gap:12px;margin:16px 0">
-          <div class="price">CLP 79.990</div>
-          <div class="muted" style="font-size:12px">*precio referencial para demo</div>
+          <div class="price">
+            CLP {{ number_format($course->price, 0, ',', '.') }}
+          </div>
         </div>
 
         <div style="display:flex;gap:12px;flex-wrap:wrap">
@@ -330,36 +334,27 @@
   <section id="temario" class="container">
     <h2 style="font-size:24px;margin-bottom:10px">Temario del curso</h2>
 
-    <details open>
-      <summary>Módulo 1 · Introducción al cambio (4 lecciones)</summary>
-      <ul class="muted" style="margin:8px 0 0;padding-left:18px;list-style:disc">
-        <li>Bienvenida y objetivos</li>
-        <li>Mindset de aprendizaje</li>
-        <li>Mapa vs. territorio</li>
-        <li>Plan personal</li>
-      </ul>
-    </details>
+    @foreach($course->modules as $module)
+      <details open>
+        <summary>
+          {{ $module->order }} · {{ $module->title }}
+          ({{ $module->lessons->count() }} lecciones)
+        </summary>
 
-    <details>
-      <summary>Módulo 2 · Neurocomunicación aplicada (5 lecciones)</summary>
-      <ul class="muted" style="margin:8px 0 0;padding-left:18px;list-style:disc">
-        <li>Lenguaje y emoción</li>
-        <li>Escucha activa</li>
-        <li>Asertividad</li>
-        <li>Feedback efectivo</li>
-        <li>Prácticas</li>
-      </ul>
-    </details>
-
-    <details>
-      <summary>Módulo 3 · Herramientas y hábitos (4 lecciones)</summary>
-      <ul class="muted" style="margin:8px 0 0;padding-left:18px;list-style:disc">
-        <li>Gestión de hábitos</li>
-        <li>Acción y coordinación</li>
-        <li>Conversaciones difíciles</li>
-        <li>Plan 30 días</li>
-      </ul>
-    </details>
+        <ul class="muted" style="margin:8px 0 0;padding-left:18px;list-style:disc">
+          @foreach($module->lessons as $lesson)
+            <li>
+              {{ $lesson->title }}
+              @if($lesson->is_preview)
+                <span>🔓 Preview</span>
+              @else
+                <span>🔒</span>
+              @endif
+            </li>
+          @endforeach
+        </ul>
+      </details>
+    @endforeach
   </section>
 
   <section class="container block">

@@ -11,8 +11,7 @@ class Module extends Model
 
     protected $fillable = [
         'course_id',
-        'title',
-        'description',
+        'title',        
         'order',
     ];
 
@@ -25,7 +24,7 @@ class Module extends Model
     // Un módulo tiene muchas lecciones
     public function lessons()
     {
-        return $this->hasMany(Lesson::class);
+        return $this->hasMany(Lesson::class)->orderBy('order');
     }
 }
 

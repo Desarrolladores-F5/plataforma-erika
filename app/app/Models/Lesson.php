@@ -15,6 +15,8 @@ class Lesson extends Model
         'content',
         'video_url',
         'order',
+        'pdf_file',
+        'is_preview',
     ];
 
     // Una lección pertenece a un módulo

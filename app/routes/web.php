@@ -120,6 +120,33 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::delete('/cursos/{course}', [CourseController::class, 'destroy'])
             ->name('admin.courses.destroy');
+        
+        // ✅ MÓDULOS (CRUD dentro de Editar Curso)
+        Route::prefix('cursos/{course}')->group(function () {
+
+            Route::post('/modulos', [\App\Http\Controllers\Admin\ModuleController::class, 'store'])
+                ->name('admin.modules.store');
+
+            Route::put('/modulos/{module}', [\App\Http\Controllers\Admin\ModuleController::class, 'update'])
+                ->name('admin.modules.update');
+
+            Route::delete('/modulos/{module}', [\App\Http\Controllers\Admin\ModuleController::class, 'destroy'])
+                ->name('admin.modules.destroy');
+                
+        });
+
+        // ✅ LECCIONES (CRUD dentro de cada módulo)
+        Route::prefix('cursos/{course}/modulos/{module}')->group(function () {
+
+            Route::post('/lecciones', [\App\Http\Controllers\Admin\LessonController::class, 'store'])
+                ->name('admin.lessons.store');
+
+            Route::put('/lecciones/{lesson}', [\App\Http\Controllers\Admin\LessonController::class, 'update'])
+                ->name('admin.lessons.update');
+
+            Route::delete('/lecciones/{lesson}', [\App\Http\Controllers\Admin\LessonController::class, 'destroy'])
+                ->name('admin.lessons.destroy');
+        });            
 
     });
 

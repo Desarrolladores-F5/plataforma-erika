@@ -23,7 +23,7 @@ class Course extends Model
     // Un curso tiene muchos módulos
     public function modules()
     {
-        return $this->hasMany(Module::class);
+        return $this->hasMany(\App\Models\Module::class)->orderBy('order');
     }
 
     // Relación muchos a muchos con usuarios (quienes han comprado el curso)
