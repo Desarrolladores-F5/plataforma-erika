@@ -14,11 +14,22 @@ class CourseController extends Controller
     {
         // Buscamos el curso por slug y cargamos módulos + lecciones
         $course = Course::where('slug', $slug)
+            ->where('is_published', true) // si estás usando publicados
             ->with(['modules.lessons'])
             ->firstOrFail();
 
+        $userHasAccess = false;
+
+        if (auth()->check()) {
+            $userHasAccess = auth()->user()
+                ->orders()
+                ->where('course_id', $course->id)
+                ->where('status', 'pagado') // OJO: debe coincidir con tu BD
+                ->exists();
+        }
+
         // Vista del alumno, dentro de /views/student
-        return view('student.curso_detalle', compact('course'));
+        return view('student.curso_detalle', compact('course', 'userHasAccess'));
     }
 
     public function iniciarCompra($slug)

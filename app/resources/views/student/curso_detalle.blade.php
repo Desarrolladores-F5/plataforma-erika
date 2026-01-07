@@ -306,13 +306,15 @@
         </div>
 
         <div style="display:flex;gap:12px;flex-wrap:wrap">
-          <a class="btn" href="{{ route('checkout.iniciar', $course->slug) }}">
-            Acceder / Comprar
-          </a>
+
+          @if(!$userHasAccess)
+            <a class="btn" href="{{ route('checkout.iniciar', $course->slug) }}">
+              Acceder / Comprar
+            </a>
+          @endif(!$userHasAccess)
+          
           <a class="btn btn-outline" href="#temario">Ver temario</a>
-          <button class="btn-ghost" onclick="alert('Demo: aquí iría el carrito en la versión final');">
-            Añadir al carrito
-          </button>
+
         </div>
 
         <div class="block card" style="margin-top:18px">
@@ -335,27 +337,34 @@
     <h2 style="font-size:24px;margin-bottom:10px">Temario del curso</h2>
 
     @foreach($course->modules as $module)
-      <details open>
-        <summary>
-          {{ $module->order }} · {{ $module->title }}
-          ({{ $module->lessons->count() }} lecciones)
-        </summary>
+        <details open>
+            <summary>
+                {{ $module->order }} · {{ $module->title }}
+                ({{ $module->lessons->count() }} lecciones)
+            </summary>
 
-        <ul class="muted" style="margin:8px 0 0;padding-left:18px;list-style:disc">
-          @foreach($module->lessons as $lesson)
-            <li>
-              {{ $lesson->title }}
-              @if($lesson->is_preview)
-                <span>🔓 Preview</span>
-              @else
-                <span>🔒</span>
-              @endif
-            </li>
-          @endforeach
-        </ul>
-      </details>
+            <ul class="muted" style="margin:8px 0 0;padding-left:18px;list-style:disc">
+                @foreach($module->lessons as $lesson)
+                    <li>
+                        @if($lesson->is_preview || $userHasAccess)
+                            <a href="{{ route('lesson.show', [$course->slug, $lesson->id]) }}">
+                                {{ $lesson->title }}
+                            </a>
+
+                            @if($lesson->is_preview && !$userHasAccess)
+                                <span>🔓 Preview</span>
+                            @endif
+                        @else
+                            <span style="opacity:.6">
+                                {{ $lesson->title }} 🔒
+                            </span>
+                        @endif
+                    </li>
+                @endforeach
+            </ul>
+        </details>
     @endforeach
-  </section>
+</section>
 
   <section class="container block">
     <div class="card" style="display:grid;grid-template-columns:1fr 2fr;gap:20px;align-items:center">

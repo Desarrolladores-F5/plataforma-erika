@@ -8,6 +8,7 @@ use App\Http\Controllers\WebpayController; // 👈 FALTABA ESTA
 use App\Http\Controllers\AdminController;   // 👈 NUEVO
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminStudentController;
+use App\Http\Controllers\LessonViewController;
 
 
 // ⭐ Home pública
@@ -149,6 +150,9 @@ Route::middleware(['auth', 'role:admin'])
         });            
 
     });
+
+Route::get('/curso/{course:slug}/leccion/{lesson}', [LessonViewController::class, 'show'])
+    ->name('lesson.show');
 
 // ⭐ Perfil
 Route::middleware('auth')->group(function () {
