@@ -94,4 +94,12 @@ class User extends Authenticatable
         return $this->role === self::ROLE_STUDENT;
     }
 
+    public function completedLessons()
+    {
+        return $this->belongsToMany(\App\Models\Lesson::class)
+            ->withPivot('completed_at')
+            ->withTimestamps();
+    }
+
+
 }

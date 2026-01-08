@@ -347,19 +347,40 @@
 
             <ul class="muted" style="margin:10px 0 0;padding-left:18px;list-style:disc">
               @foreach($module->lessons as $lesson)
-                  <li>
+
+                  @php
+                      $isCompleted = auth()->check()
+                          ? auth()->user()
+                              ->completedLessons()
+                              ->where('lessons.id', $lesson->id)
+                              ->exists()
+                          : false;
+                  @endphp
+
+                  <li style="margin-bottom:6px;">
+
+                      {{-- CASO 1: Tiene acceso (preview o comprado) --}}
                       @if($lesson->is_preview || $userHasAccess)
-                          <a href="{{ route('lesson.show', [$course->slug, $lesson->id]) }}">
+
+                          <a href="{{ route('lesson.show', [$course->slug, $lesson->id]) }}"
+                            class="hover:underline">
                               {{ $lesson->title }}
                           </a>
 
-                          {{-- 🔓 Preview (solo si es preview y aún no ha comprado) --}}
-                          @if($lesson->is_preview && !$userHasAccess)
+                          {{-- ✅ COMPLETADA --}}
+                          @if($isCompleted)
+                              <span style="margin-left:6px;font-size:12px;color:#16a34a;font-weight:600;">
+                                  ✅
+                              </span>
+
+                          {{-- 🔓 PREVIEW --}}
+                          @elseif($lesson->is_preview && !$userHasAccess)
                               <span style="margin-left:6px;font-size:12px;color:#16a34a;font-weight:600;">
                                   🔓 Preview
                               </span>
                           @endif
 
+                      {{-- CASO 2: BLOQUEADA --}}
                       @else
                           <span style="opacity:.6">
                               {{ $lesson->title }}
@@ -368,9 +389,11 @@
                               🔒
                           </span>
                       @endif
+
                   </li>
               @endforeach
           </ul>
+
 
         </details>
     @endforeach

@@ -38,6 +38,28 @@
         {{ $lesson->title }}
     </h1>
 
+    @php
+        $isCompleted = auth()->check()
+            ? auth()->user()->completedLessons()->where('lessons.id', $lesson->id)->exists()
+            : false;
+    @endphp
+
+    @if(auth()->check())
+        @if(!$isCompleted)
+            <form method="POST" action="{{ route('lesson.complete', [$course->slug, $lesson->id]) }}" class="mt-4">
+                @csrf
+                <button type="submit"
+                    class="px-4 py-2 rounded bg-green-600 text-white font-semibold hover:bg-green-700">
+                    ✅ Marcar como completada
+                </button>
+            </form>
+        @else
+            <div class="mt-4 text-green-700 font-semibold">
+                ✅ Lección completada
+            </div>
+        @endif
+    @endif
+
    @if($lesson->video_url)
         @php
             $embedUrl = null;
