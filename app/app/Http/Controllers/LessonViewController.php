@@ -31,8 +31,11 @@ class LessonViewController extends Controller
             abort(403);
         }
 
+        $module = $lesson->module;
+
         return view('student.lesson_show', compact(
             'course',
+            'module',
             'lesson',
             'userHasAccess'
         ));

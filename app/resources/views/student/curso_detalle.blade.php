@@ -337,31 +337,41 @@
     <h2 style="font-size:24px;margin-bottom:10px">Temario del curso</h2>
 
     @foreach($course->modules as $module)
-        <details open>
-            <summary>
+        <details id="modulo-{{ $module->id }}" open>
+            <summary style="cursor:pointer; font-weight:600;">
                 {{ $module->order }} · {{ $module->title }}
-                ({{ $module->lessons->count() }} lecciones)
+                <span style="opacity:.7; font-weight:400;">
+                    ({{ $module->lessons->count() }} lecciones)
+                </span>
             </summary>
 
-            <ul class="muted" style="margin:8px 0 0;padding-left:18px;list-style:disc">
-                @foreach($module->lessons as $lesson)
-                    <li>
-                        @if($lesson->is_preview || $userHasAccess)
-                            <a href="{{ route('lesson.show', [$course->slug, $lesson->id]) }}">
-                                {{ $lesson->title }}
-                            </a>
+            <ul class="muted" style="margin:10px 0 0;padding-left:18px;list-style:disc">
+              @foreach($module->lessons as $lesson)
+                  <li>
+                      @if($lesson->is_preview || $userHasAccess)
+                          <a href="{{ route('lesson.show', [$course->slug, $lesson->id]) }}">
+                              {{ $lesson->title }}
+                          </a>
 
-                            @if($lesson->is_preview && !$userHasAccess)
-                                <span>🔓 Preview</span>
-                            @endif
-                        @else
-                            <span style="opacity:.6">
-                                {{ $lesson->title }} 🔒
-                            </span>
-                        @endif
-                    </li>
-                @endforeach
-            </ul>
+                          {{-- 🔓 Preview (solo si es preview y aún no ha comprado) --}}
+                          @if($lesson->is_preview && !$userHasAccess)
+                              <span style="margin-left:6px;font-size:12px;color:#16a34a;font-weight:600;">
+                                  🔓 Preview
+                              </span>
+                          @endif
+
+                      @else
+                          <span style="opacity:.6">
+                              {{ $lesson->title }}
+                          </span>
+                          <span style="margin-left:6px;font-size:12px;opacity:.7;">
+                              🔒
+                          </span>
+                      @endif
+                  </li>
+              @endforeach
+          </ul>
+
         </details>
     @endforeach
 </section>
