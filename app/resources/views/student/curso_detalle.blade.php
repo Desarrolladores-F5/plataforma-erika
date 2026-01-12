@@ -333,6 +333,50 @@
     </div>
   </section>
 
+    @if(auth()->check())
+    @php
+        $nextLesson = $course->nextLessonForUser(auth()->user());
+    @endphp
+
+    @if($nextLesson)
+        <div class="container" style="margin-bottom:24px;">
+            <div style="
+                background:#fff;
+                border:1px solid #f2d4b8;
+                border-radius:16px;
+                padding:18px 20px;
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:16px;
+            ">
+
+                <div>
+                    <div style="font-size:12px; text-transform:uppercase; color:#777;">
+                        Continúa donde quedaste
+                    </div>
+                    <div style="font-weight:600;">
+                        Siguiente lección disponible
+                    </div>
+                </div>
+
+                <a href="{{ route('lesson.show', [$course->slug, $nextLesson->id]) }}"
+                   style="
+                       background:#F48B25;
+                       color:#fff;
+                       padding:10px 18px;
+                       border-radius:10px;
+                       font-weight:700;
+                       text-decoration:none;
+                   ">
+                    ▶ Continuar lección
+                </a>
+
+            </div>
+        </div>
+    @endif
+@endif
+
   <section id="temario" class="container">
     <h2 style="font-size:24px;margin-bottom:10px">Temario del curso</h2>
 

@@ -31,5 +31,20 @@ class Course extends Model
     {
         return $this->belongsToMany(User::class);
     }
+
+    public function nextLessonForUser($user)
+    {
+        $completedLessonIds = $user->completedLessons()
+            ->wherePivotNotNull('completed_at')
+            ->pluck('lessons.id');
+
+        return $this->modules
+            ->sortBy('order')
+            ->flatMap(function ($module) {
+                return $module->lessons->sortBy('order');
+            })
+            ->first(fn ($lesson) => !$completedLessonIds->contains($lesson->id));
+    }
+
 }
 
