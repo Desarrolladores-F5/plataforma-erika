@@ -126,7 +126,13 @@
     </header>
 
     <div class="container">
-        <h1>Mis Cursos</h1>
+
+        <div class="flex items-center justify-between mb-10">
+            <h1 class="text-2xl font-bold">
+                Mis Cursos
+            </h1>            
+        </div>               
+
 
         @if($courses->count() === 0)
             <p class="empty">No tienes cursos todavía. ¡Explora el catálogo!</p>
@@ -134,19 +140,58 @@
             <div class="courses-grid">
                 @foreach($courses as $course)
                 <div class="card">
+
+                    {{-- Badge --}}                    
+                    <span style="
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 6px;
+                        margin-bottom: 14px;
+                        padding: 6px 12px;
+                        font-size: 12px;
+                        font-weight: 700;
+                        color: #15803d;
+                        background: #dcfce7;
+                        border-radius: 999px;
+                    ">
+                        ✔ Curso activo
+                    </span>
+
                     <h3>{{ $course->title }}</h3>
                     <p style="color: var(--muted); font-size: 14px;">
                         {{ $course->description }}
                     </p>
 
-                    <a href="{{ route('curso.detalle', $course->slug) }}" class="btn-primario">
-                        Ver Curso →
+                    <a href="{{ route('curso.detalle', $course->slug) }}" class="text-orange-600 font-semibold hover:underline">
+                        Continuar Curso →
                     </a>
                 </div>
                 @endforeach
             </div>
         @endif
     </div>
+
+    <a href="{{ route('home') }}"
+        style="
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 20px;
+            background: var(--brand);
+            color: #fff;
+            font-weight: 700;
+            border-radius: 999px;
+            text-decoration: none;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+            z-index: 999;
+        "
+        onmouseover="this.style.background='#d9791f'"
+        onmouseout="this.style.background='var(--brand)'">
+            🔍 Explorar cursos
+    </a>
 
 </body>
 </html>
