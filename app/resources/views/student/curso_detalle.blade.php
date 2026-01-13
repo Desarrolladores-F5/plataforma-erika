@@ -377,6 +377,34 @@
     @endif
 @endif
 
+  @php
+    $lessonIds = $course->modules->flatMap->lessons->pluck('id');
+    $totalLessons = $lessonIds->count();
+
+    $completedLessons = 0;
+
+    if (auth()->check() && $totalLessons > 0) {
+        $completedLessons = auth()->user()
+            ->completedLessons()
+            ->wherePivotNotNull('completed_at')
+            ->whereIn('lessons.id', $lessonIds)
+            ->count();
+    }
+@endphp
+
+@if($totalLessons > 0)
+    <div class="container" style="margin-bottom: 14px;">
+        <div style="font-size:14px;color:var(--muted);">
+            Progreso del curso:
+            <strong style="color:var(--text);">
+                {{ $completedLessons }} / {{ $totalLessons }}
+            </strong>
+            lecciones completadas
+        </div>
+    </div>
+@endif
+
+
   <section id="temario" class="container">
     <h2 style="font-size:24px;margin-bottom:10px">Temario del curso</h2>
 

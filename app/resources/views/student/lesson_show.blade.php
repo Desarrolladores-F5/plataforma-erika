@@ -39,24 +39,33 @@
     </h1>
 
     @php
-        $isCompleted = auth()->check()
-            ? auth()->user()->completedLessons()->where('lessons.id', $lesson->id)->exists()
-            : false;
+    $isCompleted = auth()->check()
+        ? auth()->user()
+            ->completedLessons()
+            ->where('lessons.id', $lesson->id)
+            ->wherePivotNotNull('completed_at')
+            ->exists()
+        : false;
     @endphp
 
     @if(auth()->check())
         @if(!$isCompleted)
-            <form method="POST" action="{{ route('lesson.complete', [$course->slug, $lesson->id]) }}" class="mt-4">
+            <form method="POST"
+                action="{{ route('lesson.complete', [$course->slug, $lesson->id]) }}"
+                class="mt-4">
                 @csrf
                 <button type="submit"
-                    class="px-4 py-2 rounded bg-green-600 text-white font-semibold hover:bg-green-700">
+                    class="px-4 py-2 rounded bg-green-600 text-white font-semibold hover:bg-green-700 transition">
                     ✅ Marcar como completada
                 </button>
             </form>
         @else
-            <div class="mt-4 text-green-700 font-semibold">
+            <div class="mt-4 mb-6 inline-flex items-center gap-2
+                px-4 py-2 rounded-lg
+                bg-green-100 text-green-800
+                font-semibold text-sm">
                 ✅ Lección completada
-            </div>
+            </div>>
         @endif
     @endif
 
@@ -155,5 +164,35 @@
         </div>
     @endif
 
+    @php
+        $nextLesson = auth()->check()
+            ? $course->nextLessonForUser(auth()->user())
+            : null;
+    @endphp
+
+    @if($nextLesson)
+        <div class="mt-12 flex justify-end">
+            <a href="{{ route('lesson.show', [$course->slug, $nextLesson->id]) }}"
+               class="inline-flex items-center gap-3
+                      px-6 py-4 rounded-xl
+                      bg-orange-500 text-white
+                      font-bold text-lg
+                      shadow-md
+                      hover:bg-orange-600 hover:scale-[1.02]
+                      transition">
+                ▶ Ir a la siguiente lección
+            </a>
+        </div>
+    @else
+        <div class="mt-12 text-center">
+            <p class="text-lg font-semibold text-green-700">
+                🎉 Has completado todas las lecciones del curso
+            </p>
+            <p class="text-sm text-gray-600 mt-1">
+                El certificado estará disponible cuando completes el curso al 100%
+            </p>
+        </div>
+    @endif
+    
 </div>
 @endsection
