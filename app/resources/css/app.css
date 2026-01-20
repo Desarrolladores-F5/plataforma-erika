@@ -2,6 +2,130 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ✅ Branding global (pantalla + todo) */
+:root {
+    --brand: #F97316;
+    --brand-hover: #EA580C;
+    --text-main: #1F2937;
+    --text-muted: #6B7280;
+    --bg-soft: #F9FAFB;
+  }
+
+/* ✅ Aplicación mínima: botones de Breeze (sin tocar Blade) */
+button.bg-indigo-600,
+button.bg-indigo-500,
+a.bg-indigo-600,
+a.bg-indigo-500 {
+  background-color: var(--brand) !important;
+}
+
+button.bg-indigo-600:hover,
+button.bg-indigo-500:hover,
+a.bg-indigo-600:hover,
+a.bg-indigo-500:hover {
+  background-color: var(--brand-hover) !important;
+}
+
+/* (Opcional) foco más Erika */
+button:focus,
+a:focus {
+  outline: none;
+}
+
+/* Inputs & selects – foco Erika */
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--brand) !important;
+  box-shadow: 0 0 0 1px var(--brand) !important;
+}
+
+a {
+  color: var(--brand);
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--brand-hover);
+}
+
+label {
+  color: var(--text-main);
+}
+
+.text-gray-600 {
+  color: var(--text-muted) !important;
+}
+
+/* Tipografía global */
+@layer base {
+  html {
+    font-family: "Poppins", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  }
+}
+
+/* Títulos coherentes (Mi Espacio / Mi Perfil / etc.) */
+.brand-title {
+  font-size: 1.5rem;      /* text-2xl aprox */
+  font-weight: 600;       /* semibold */
+  letter-spacing: -0.01em;
+  color: var(--text-main);
+}
+
+.brand-subtitle {
+  font-size: 0.875rem;    /* text-sm */
+  color: var(--text-muted);
+}
+
+/* =========================
+   Micro feedback (global)
+   ========================= */
+
+/* Transiciones suaves generales */
+button, a, input, select, textarea, .shadow, .shadow-sm, .shadow-md {
+  transition: all 0.15s ease;
+}
+
+/* Links: underline sutil al hover */
+a:hover {
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+/* Tarjetas: hover elegante (para contenedores que quieras) */
+.brand-card {
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 14px;
+}
+
+.brand-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+}
+
+/* Inputs: hover/focus más fino */
+input:hover, select:hover, textarea:hover {
+  border-color: rgba(249, 115, 22, 0.35) !important; /* brand suave */
+}
+
+/* Estados (mensajes/alertas) */
+.brand-success {
+  background: rgba(34, 197, 94, 0.10);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  color: rgb(22, 101, 52);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.brand-error {
+  background: rgba(239, 68, 68, 0.10);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: rgb(153, 27, 27);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+
 @media print {
   /* Oculta elementos del layout + cualquier cosa con class="print:hidden" */
   header, nav, footer, .print\:hidden {
@@ -22,4 +146,5 @@
   .shadow, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl {
     box-shadow: none !important;
   }
+  
 }

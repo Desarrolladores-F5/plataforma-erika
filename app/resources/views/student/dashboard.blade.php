@@ -12,6 +12,7 @@
     <style>
         :root {
             --brand: #F48B25;     /* Naranjo oficial */
+            --brand-hover: #d9791f;
             --bg: #FFF7EF;
             --text: #222222;
             --muted: #666666;
@@ -24,6 +25,10 @@
             font-family: 'Quicksand', sans-serif;
             color: var(--text);
         }
+
+        /* =========================
+            Header alumno
+            ========================= */
 
         header {
             background: #fff;
@@ -45,7 +50,17 @@
             color: var(--text);
             font-weight: 600;
             margin-left: 18px;
+            transition: color 0.15s ease;
         }
+
+        header a:hover {
+            color: var(--brand);
+        }
+
+
+        /* =========================
+            Layout
+            ========================= */
 
         .container {
             max-width: 1100px;
@@ -58,6 +73,11 @@
             margin-bottom: 20px;
         }
 
+
+        /* =========================
+            Cursos
+            ========================= */
+
         .courses-grid {
             display: grid;
             gap: 24px;
@@ -67,16 +87,27 @@
         .card {
             background: #fff;
             border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            padding: 20px;            
             border: 1px solid #f2d4b8;
             display: flex;
             flex-direction: column;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(0,0,0,0.08);
+            border-color: rgba(244, 139, 37, 0.45);
         }
 
         .card h3 {
             margin-top: 0;
         }
+
+
+        /* =========================
+            Botones
+            ========================= */
 
         .btn {
             display: block;
@@ -88,12 +119,17 @@
             font-weight: 700;
             text-decoration: none;
             border-radius: 10px;
-            transition: 0.2s;
+            transition: background 0.15s ease, transform 0.15s ease;
         }
 
         .btn:hover {
-            background: #d9791f;
+            background: var(--brand-hover);
+            transform: translateY(-1px);
         }
+
+        /* =========================
+        Estado vacío
+        ========================= */
 
         .empty {
             text-align: center;
@@ -127,11 +163,15 @@
 
     <div class="container">
 
-        <div class="flex items-center justify-between mb-10">
-            <h1 class="text-2xl font-bold">
+        <div class="mb-10">
+            <h1 class="brand-title">
                 Mis Cursos
-            </h1>            
-        </div>               
+            </h1>
+            <p class="brand-subtitle mt-1">
+                Accede a tus cursos activos y continúa tu aprendizaje
+            </p>
+        </div>
+              
 
 
         @if($courses->count() === 0)

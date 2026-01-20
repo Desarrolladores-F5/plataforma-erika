@@ -2,26 +2,23 @@
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
-            <div class="flex">
+
+            <!-- Left side -->
+            <div class="flex items-center">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                    <a href="{{ route('dashboard') }}" class="flex items-center">
+                        <img
+                            src="https://erikaherrera.cl/imagenes/logo2.svg"
+                            alt="Erika Herrera"
+                            class="h-[58px] w-auto"
+                        >
                     </a>
-                </div>
-
-                <!-- Navigation Links -->
-                @auth
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                            {{ __('Dashboard') }}
-                        </x-nav-link>
-                    </div>
-                @endauth
+                </div>                
             </div>
-
+            
             <!-- Right side -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <div class="hidden sm:flex sm:items-center sm:ms-6 ml-auto">
 
                 {{-- 🔐 USUARIO LOGUEADO --}}
                 @auth
