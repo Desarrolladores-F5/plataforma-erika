@@ -41,14 +41,18 @@
 
                         <x-slot name="content">
                             <x-dropdown-link :href="route('profile.edit')">
-                                {{ __('Profile') }}
+                                Mi Perfil
+                            </x-dropdown-link>
+
+                            <x-dropdown-link :href="route('orders.index')">
+                                Historial de compras
                             </x-dropdown-link>
 
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault(); this.closest('form').submit();">
-                                    {{ __('Log Out') }}
+                                    Cerrar sesión
                                 </x-dropdown-link>
                             </form>
                         </x-slot>

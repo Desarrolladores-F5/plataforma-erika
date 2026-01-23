@@ -1,23 +1,27 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="text-xl font-semibold text-orange-800">
-                🧑‍💼 Panel Administrativo
-            </h2>
-
-            <span class="text-sm text-gray-500">
-                {{ now()->format('d-m-Y H:i') }}
-            </span>
-        </div>
-    </x-slot>
-
-    {{-- 🔧 ESPACIADOR REAL ENTRE HEADER Y CONTENIDO --}}
-    <div class="h-6"></div>
+<x-app-layout :hideNav="false">
 
     {{-- FONDO --}}
     <div class="py-12 bg-[#FFF7EF]">
         {{-- CONTENEDOR REAL --}}
         <div class="max-w-6xl mx-auto px-6 space-y-12">
+
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="brand-title">
+                        🧑‍💼 Panel Administrativo
+                    </h1>
+                    <p class="brand-subtitle mt-1">
+                        Gestión general de la plataforma
+                    </p>
+                </div>
+
+                <span class="text-sm text-gray-500">
+                    {{ now()->format('d-m-Y H:i') }}
+                </span>
+            </div>
+        </div>
+
 
             {{-- CARDS --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

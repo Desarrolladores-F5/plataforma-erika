@@ -125,6 +125,57 @@ input:hover, select:hover, textarea:hover {
   padding: 12px 14px;
 }
 
+body {
+  background: #FFF7EF;
+}
+
+/* =========================
+   Feedback PRO (global)
+   ========================= */
+
+.alert {
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.alert svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Success */
+.alert-success {
+  background: rgba(34, 197, 94, 0.10);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  color: rgb(22, 101, 52);
+}
+
+/* Error */
+.alert-error {
+  background: rgba(239, 68, 68, 0.10);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: rgb(153, 27, 27);
+}
+
+/* Warning */
+.alert-warning {
+  background: rgba(234, 179, 8, 0.12);
+  border: 1px solid rgba(234, 179, 8, 0.35);
+  color: rgb(113, 63, 18);
+}
+
+/* Info */
+.alert-info {
+  background: rgba(59, 130, 246, 0.10);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  color: rgb(30, 64, 175);
+
+}
 
 @media print {
   /* Oculta elementos del layout + cualquier cosa con class="print:hidden" */
