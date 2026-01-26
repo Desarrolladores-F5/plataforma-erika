@@ -9,6 +9,6 @@
   };
 @endphp
 
-<div {{ $attributes->merge(['class' => $classes]) }}>
+<div {{ $attributes->merge(['class' => $classes . ' fade-in']) }}>
     {{ $slot }}
 </div>

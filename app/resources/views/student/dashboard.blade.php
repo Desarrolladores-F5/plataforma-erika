@@ -1,35 +1,18 @@
 <x-app-layout>
-    <x-slot name="content">
-        <div>
-            <h2 class="brand-title">Mis Cursos</h2>
-            <p class="brand-subtitle mt-1">
-                Accede a tus cursos activos y continúa tu aprendizaje
-            </p>
-        </div>
-
-        <x-dropdown-link :href="route('profile.edit')">
-            Perfil
-        </x-dropdown-link>
-
-        <x-dropdown-link :href="route('orders.index')">
-            📄 Ver historial de compras
-        </x-dropdown-link>
-
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <x-dropdown-link :href="route('logout')"
-                    onclick="event.preventDefault(); this.closest('form').submit();">
-                    Cerrar sesión
-            </x-dropdown-link>
-        </form>
-
-    </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
+            <div class="mb-8">
+                <h1 class="brand-title">Mis Cursos</h1>
+                <p class="brand-subtitle mt-1">
+                    Accede a tus cursos activos y continúa tu aprendizaje
+                </p>
+            </div>
+
+
             @if($courses->count() === 0)
-                <div class="brand-card bg-white p-8 text-center">
+                <div class="brand-card card-appear bg-white p-8 text-center">
                     <p class="text-gray-600 text-lg">
                         No tienes cursos todavía. ¡Explora el catálogo!
                     </p>
@@ -38,12 +21,32 @@
 
                 <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach($courses as $course)
-                        <div class="brand-card bg-white p-6 flex flex-col">
+                        @php
+                            // Placeholder visual hasta conectar a BD real
+                            $progress = rand(15, 90);
+
+                            if ($progress >= 90) {
+                                $statusText = 'Completado';
+                                $statusClasses = 'bg-green-100 text-green-700';
+                                $statusIcon = '✅';
+                            } elseif ($progress >= 20) {
+                                $statusText = 'En progreso';
+                                $statusClasses = 'bg-blue-100 text-blue-700';
+                                $statusIcon = '⏳';
+                            } else {
+                                $statusText = 'Nuevo';
+                                $statusClasses = 'bg-gray-100 text-gray-700';
+                                $statusIcon = '✨';
+                            }
+                        @endphp
+
+                        <div class="brand-card card-appear bg-white p-6 flex flex-col">
 
                             {{-- Badge --}}
-                            <span class="inline-flex items-center gap-2 mb-3 px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
-                                ✔ Curso activo
+                            <span class="inline-flex items-center gap-2 mb-3 px-3 py-1 text-xs font-semibold rounded-full {{ $statusClasses }}">
+                                {{ $statusIcon }} {{ $statusText }}
                             </span>
+
 
                             <h3 class="text-lg font-semibold mb-2">
                                 {{ $course->title }}
@@ -53,9 +56,26 @@
                                 {{ $course->description }}
                             </p>
 
+                            {{-- Progreso visual --}}
+                            <div class="mb-4">
+                                <div class="flex items-center justify-between text-xs text-gray-600 mb-1">
+                                    <span>Progreso</span>
+                                    <span>{{ $progress }}%</span>
+                                </div>
+
+                                <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                                    <div class="h-2 rounded-full transition-all duration-500"
+                                         style="width: {{ $progress }}%; background: #22c55e;">
+                                    </div>
+                                </div>
+                            </div>
+
                             <a href="{{ route('curso.detalle', $course->slug) }}"
-                               class="mt-auto text-orange-600 font-semibold hover:underline">
-                                Continuar curso →
+                               class="mt-auto inline-flex items-center justify-center px-4 py-2 rounded-lg font-semibold text-white button-like"
+                               style="background: var(--brand);"
+                               onmouseover="this.style.background='var(--brand-hover)'"
+                               onmouseout="this.style.background='var(--brand)'">
+                                Continuar
                             </a>
 
                         </div>
@@ -66,12 +86,12 @@
         </div>
     </div>
 
+    {{-- Botón flotante --}}
     <a href="{{ route('home') }}"
-        class="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2 px-5 py-3 rounded-full
-                text-white font-semibold shadow-lg transition
-                hover:scale-105"
-        style="background: var(--brand);">
-            🔍 Explorar cursos
+       class="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2 px-5 py-3 rounded-full
+              text-white font-semibold shadow-lg transition hover:scale-105"
+       style="background: var(--brand);">
+        🔍 Explorar cursos
     </a>
 
 </x-app-layout>

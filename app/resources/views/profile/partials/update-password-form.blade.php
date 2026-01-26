@@ -9,7 +9,8 @@
         </p>
     </header>
 
-    <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('password.update') }}" x-data="{ loading: false }" x-on:submit="loading = true" class="mt-6 space-y-6">
+
         @csrf
         @method('put')
 
@@ -32,7 +33,13 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Guardar') }}</x-primary-button>
+            <x-primary-button
+                x-bind:class="{ 'button-loading': loading }"
+                x-bind:disabled="loading"   
+            >
+                <span x-show="!loading">Guardar</span>
+                <span x-show="loading">Guardando…</span>
+            </x-primary-button>
 
             @if (session('status') === 'password-updated')
                 <p
@@ -41,7 +48,7 @@
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
                     class="text-sm text-gray-600"
-                >{{ __('Saved.') }}</p>
+                >Guardado.</p>
             @endif
         </div>
     </form>

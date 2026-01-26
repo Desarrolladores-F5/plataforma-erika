@@ -48,7 +48,14 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Guardar') }}</x-primary-button>
+            <x-primary-button
+                x-data="{ loading: false }"
+                x-on:click="loading = true"
+                x-bind:class="{ 'button-loading': loading }"
+            >
+                <span x-show="!loading">Guardar</span>
+                <span x-show="loading">Guardando…</span>
+            </x-primary-button>
 
             @if (session('status') === 'profile-updated')
                 <p
