@@ -291,6 +291,31 @@ button[type="submit"]:hover {
   }
 }
 
+/* Stagger (cards una por una) */
+.stagger {
+  animation: cardAppear 1.5s ease-out both;
+  animation-delay: calc(var(--i) * 90ms);
+}
+
+/* Botón principal (CTA) - mantiene contraste */
+.brand-btn {
+  background: var(--brand);
+  color: #fff !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.brand-btn:hover {
+  /* hover notorio sin perder legibilidad */
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+  filter: brightness(0.95);
+  color: #fff !important;
+}
+
+.brand-btn:active {
+  transform: translateY(0);
+  filter: brightness(0.9);
+}
 
 
 @media print {

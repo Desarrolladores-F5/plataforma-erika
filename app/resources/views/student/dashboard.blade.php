@@ -20,11 +20,12 @@
             @else
 
                 <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    @foreach($courses as $course)
+                    @foreach($courses as $i => $course)
                         @php
                             // Placeholder visual hasta conectar a BD real
                             $progress = rand(15, 90);
 
+                            // Badge según progreso
                             if ($progress >= 90) {
                                 $statusText = 'Completado';
                                 $statusClasses = 'bg-green-100 text-green-700';
@@ -38,9 +39,22 @@
                                 $statusClasses = 'bg-gray-100 text-gray-700';
                                 $statusIcon = '✨';
                             }
+
+                            // CTA inteligente
+                            if ($progress >= 90) {
+                                $ctaText = 'Revisar';
+                                $ctaColor = '#64748b'; // gris elegante
+                            } elseif ($progress >= 20) {
+                                $ctaText = 'Continuar';
+                                $ctaColor = 'var(--brand)'; // naranjo Erika
+                            } else {
+                                $ctaText = 'Empezar';
+                                $ctaColor = '#16a34a'; // verde inicio
+                            }
+
                         @endphp
 
-                        <div class="brand-card card-appear bg-white p-6 flex flex-col">
+                        <div class="brand-card card-appear stagger bg-white p-6 flex flex-col" style="--i: {{ $i }};">
 
                             {{-- Badge --}}
                             <span class="inline-flex items-center gap-2 mb-3 px-3 py-1 text-xs font-semibold rounded-full {{ $statusClasses }}">
@@ -71,11 +85,8 @@
                             </div>
 
                             <a href="{{ route('curso.detalle', $course->slug) }}"
-                               class="mt-auto inline-flex items-center justify-center px-4 py-2 rounded-lg font-semibold text-white button-like"
-                               style="background: var(--brand);"
-                               onmouseover="this.style.background='var(--brand-hover)'"
-                               onmouseout="this.style.background='var(--brand)'">
-                                Continuar
+                               class="mt-auto inline-flex items-center justify-center px-4 py-2 rounded-lg font-semibold brand-btn">                                                            
+                                {{ $ctaText }}
                             </a>
 
                         </div>
@@ -89,9 +100,10 @@
     {{-- Botón flotante --}}
     <a href="{{ route('home') }}"
        class="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2 px-5 py-3 rounded-full
-              text-white font-semibold shadow-lg transition hover:scale-105"
+                text-white font-semibold shadow-lg transition hover:scale-105 hover:text-white focus:text-white"
        style="background: var(--brand);">
-        🔍 Explorar cursos
+         🔍 Explorar cursos
     </a>
+
 
 </x-app-layout>
