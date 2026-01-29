@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminController;   // 👈 NUEVO
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminStudentController;
 use App\Http\Controllers\LessonViewController;
+use App\Models\Course;
 
 
 // ⭐ Home pública
@@ -164,6 +165,21 @@ Route::middleware('auth')->group(function () {
 
 });
 
+// Ruta Dinámica
+Route::get('/mis-cursos/{course}', function (Course $course) {
+    // Cargamos módulos + lecciones ordenadas
+    $course->load([
+        'modules.lessons' => function ($q) {
+            $q->orderBy('order');
+        }
+    ]);
+    return view('student.curso_detalle', compact('course'));
+})->middleware('auth')->name('curso.ver');
+
+// Ruta vista publica cursos
+Route::get('/cursos/{course:slug}', function (Course $course) {
+    return view('courses.show', compact('course'));
+})->name('courses.show');
 
 // ⭐ Breeze (auth)
 require __DIR__.'/auth.php';
