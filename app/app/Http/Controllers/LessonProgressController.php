@@ -10,23 +10,30 @@ class LessonProgressController extends Controller
 {
     public function store(Request $request, Course $course, Lesson $lesson)
     {
-        // seguridad: lección pertenece al curso
-        if ($lesson->module->course_id !== $course->id) abort(404);
+        // 🔐 1. Validar que la lección pertenece al curso
+        if (!$lesson->module || $lesson->module->course_id !== $course->id) {
+            abort(404);
+        }
 
         $user = $request->user();
 
-        // Solo si tiene acceso (o si es preview, opcional)
+        // 🎟️ 2. Validar acceso del usuario al curso (si no es lección preview)
         $userHasAccess = $user->orders()
             ->where('course_id', $course->id)
             ->where('status', 'pagado')
             ->exists();
 
-        if (!$lesson->is_preview && !$userHasAccess) abort(403);
+        if (!$lesson->is_preview && !$userHasAccess) {
+            abort(403);
+        }
 
-        $user->completedLessons()->syncWithoutDetaching([
+        // ✅ 3. Marcar lección como completada sin duplicar registros
+        $user->lessons()->syncWithoutDetaching([
             $lesson->id => ['completed_at' => now()]
         ]);
 
-        return back()->with('success', 'Lección marcada como completada ✅');
+        return redirect()
+            ->route('curso.ver', $course->id)
+            ->with('success', 'Lección marcada como completada ✅');
     }
 }

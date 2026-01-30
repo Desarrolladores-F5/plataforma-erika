@@ -318,9 +318,6 @@
           <a class="btn" href="{{ route('courses.show', 'autoconocimiento-bienestar-demo') }}">
             Acceder / Comprar
           </a>
-          <a class="btn btn-outline" ref="{{ route('courses.show', 'autoconocimiento-bienestar-demo') }}#temario">
-            Ver temario
-          </a>
         </div>
       </div>
     </div>

@@ -23,7 +23,20 @@
                     @foreach($courses as $i => $course)
                         @php
                             // Placeholder visual hasta conectar a BD real
-                            $progress = rand(15, 90);
+                            $totalLessons = $course->modules->sum(function ($module) {
+                                return $module->lessons->count();
+                            });
+
+                            $lessonIds = $course->modules->flatMap->lessons->pluck('id');
+
+                            $completedLessons = auth()->user()
+                                ->completedLessons()
+                                ->whereIn('lesson_id', $lessonIds)
+                                ->count();
+
+                            $progress = $totalLessons > 0
+                                ? round(($completedLessons / $totalLessons) * 100)
+                                : 0;
 
                             // Badge según progreso
                             if ($progress >= 90) {

@@ -1,6 +1,11 @@
 <x-app-layout>
 
     {{-- Header del curso --}}
+    @if (session('success'))
+        <div class="mb-4 px-4 py-3 rounded-lg bg-green-100 text-green-800 border border-green-200">
+            {{ session('success') }}
+        </div>
+    @endif
     <div class="py-8 border-b border-gray-200">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
@@ -20,12 +25,12 @@
             <div class="mt-4">
                 <div class="flex items-center justify-between text-sm text-gray-600 mb-1">
                     <span>Progreso del curso</span>
-                    <span>45%</span>
+                    <span>{{ $progress }}%</span>
                 </div>
 
-                <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
                     <div class="h-2 rounded-full transition-all duration-500"
-                         style="width: 45%; background: #22c55e;">
+                        style="width: {{ $progress }}%; background: #22c55e;">
                     </div>
                 </div>
             </div>
@@ -42,7 +47,6 @@
 
                     <h2 class="text-lg font-semibold mb-4">Contenido del curso</h2>
 
-                    {{-- Módulo 1 --}}
                     @forelse($course->modules as $module)
                         <div class="mb-6">
 
@@ -52,15 +56,32 @@
 
                             <ul class="space-y-2 text-sm">
                                 @forelse($module->lessons as $lesson)
-                                    <li
-                                        class="lesson-item flex items-center gap-2 text-gray-600 hover:text-orange-600 transition cursor-pointer"
-                                        data-title="{{ $lesson->title }}"
-                                        data-content="{{ $lesson->content }}"
-                                        data-video="{{ $lesson->video_url }}"
-                                        data-pdf="{{ $lesson->pdf_file }}"
-                                    >
-                                        ▶ {{ $lesson->title }}
+
+                                    @php
+                                        $isActive = isset($currentLesson) && $currentLesson->id === $lesson->id;
+                                    @endphp
+
+                                    <li>
+                                        <a
+                                            href="#"
+                                            class="lesson-item flex items-center gap-2 transition
+                                                {{ $isActive ? 'text-orange-600 font-semibold' : 'text-gray-600 hover:text-orange-600' }}"
+                                            data-lesson="{{ $lesson->id }}"
+                                            data-title="{{ $lesson->title }}"
+                                            data-content="{{ $lesson->content }}"
+                                            data-video="{{ $lesson->video_url }}"
+                                            data-pdf="{{ $lesson->pdf_file }}"
+                                        >
+                                            @if($isActive)
+                                                ▶
+                                            @else
+                                                ☐
+                                            @endif
+
+                                            {{ $lesson->title }}
+                                        </a>
                                     </li>
+
                                 @empty
                                     <li class="text-gray-400 italic">
                                         (Este módulo aún no tiene lecciones)
@@ -77,6 +98,7 @@
 
                 </div>
             </aside>
+
 
             {{-- Área de contenido de la lección --}}
             <main class="lg:col-span-3">
@@ -108,11 +130,17 @@
                         </a>
                     </div>
 
-                    <button
-                        class="brand-cta px-6 py-3 rounded-lg font-semibold text-white"
-                        style="background: var(--brand);">
-                        Marcar como completada
-                    </button>
+                    <form method="POST" id="complete-form" action="">
+                        @csrf
+
+                        <button
+                            type="submit"
+                            class="brand-cta px-6 py-3 rounded-lg font-semibold text-white hover:scale-105 transition"
+                            style="background: var(--brand);">
+                            Marcar como completada
+                        </button>
+                    </form>
+
 
                 </div>
             </main>
@@ -121,31 +149,49 @@
     </div>
 
     <script>
-    document.querySelectorAll('.lesson-item').forEach(item => {
-        item.addEventListener('click', function () {
-            const title = this.dataset.title;
-            const content = this.dataset.content;
-            const video = this.dataset.video;
-            const pdf = this.dataset.pdf;
+        document.querySelectorAll('.lesson-item').forEach(item => {
+            item.addEventListener('click', function (e) {
+                e.preventDefault();
 
-            // Título
-            document.getElementById('lesson-title').innerText = title;
+                // Quitar resaltado anterior
+                document.querySelectorAll('.lesson-item').forEach(el => {
+                    el.classList.remove('text-orange-600', 'font-semibold');
+                    el.classList.add('text-gray-600');
+                });
 
-            // Contenido
-            document.getElementById('lesson-content').innerHTML = content ?? 'Sin descripción disponible.';
+                // Marcar activa
+                this.classList.remove('text-gray-600');
+                this.classList.add('text-orange-600', 'font-semibold');
 
-            // Video (YouTube y Vimeo)
-            const lessonVideo = document.getElementById('lesson-video');
+                const lessonId = this.dataset.lesson;
+                const title = this.dataset.title;
+                const content = this.dataset.content;
+                const video = this.dataset.video;
+                const pdf = this.dataset.pdf;
 
-            if (video) {
+                // 🔥 ACTUALIZA EL FORM CON LA LECCIÓN CORRECTA
+                const form = document.getElementById('complete-form');
+                form.action = `/curso/{{ $course->slug }}/leccion/${lessonId}/completar`;
+
+                // Título
+                document.getElementById('lesson-title').innerText = title;
+
+                // Contenido
+                document.getElementById('lesson-content').innerHTML = content ?? 'Sin descripción disponible.';
+
+                // VIDEO
+                const lessonVideo = document.getElementById('lesson-video');
                 let embedUrl = '';
 
-                if (video.includes('youtube') || video.includes('youtu.be')) {
-                    const id = extractYoutubeId(video);
-                    if (id) embedUrl = `https://www.youtube.com/embed/${id}`;
-                } else if (video.includes('vimeo')) {
-                    const id = extractVimeoId(video);
-                    if (id) embedUrl = `https://player.vimeo.com/video/${id}`;
+                if (video) {
+                    if (video.includes('youtube') || video.includes('youtu.be')) {
+                        const id = extractYoutubeId(video);
+                        if (id) embedUrl = `https://www.youtube.com/embed/${id}`;
+                    } 
+                    else if (video.includes('vimeo')) {
+                        const id = extractVimeoId(video);
+                        if (id) embedUrl = `https://player.vimeo.com/video/${id}`;
+                    }
                 }
 
                 if (embedUrl) {
@@ -157,46 +203,42 @@
                             allow="autoplay; fullscreen; picture-in-picture">
                         </iframe>`;
                 } else {
-                    lessonVideo.innerHTML = `
-                        <span class="text-gray-400">
-                            El enlace de video no es válido o no es compatible.
-                        </span>`;
+                    lessonVideo.innerHTML = `<span class="text-gray-400">Esta lección no tiene video.</span>`;
                 }
-            } else {
-                lessonVideo.innerHTML = `
-                    <span class="text-gray-400">
-                        Esta lección no tiene video.
-                    </span>`;
-            }
 
-            function extractVimeoId(url) {
-                const match = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
-                return match ? match[1] : '';
-            }
+                // PDF
+                const pdfContainer = document.getElementById('pdf-container');
+                const pdfViewer = document.getElementById('pdf-viewer');
+                const pdfLink = document.getElementById('lesson-pdf');
 
-            // PDF
-            const pdfContainer = document.getElementById('pdf-container');
-            const pdfViewer = document.getElementById('pdf-viewer');
-            const pdfLink = document.getElementById('lesson-pdf');
-
-            if (pdf) {
-                const pdfUrl = `/storage/${pdf}`;
-                pdfViewer.src = pdfUrl;
-                pdfLink.href = pdfUrl;
-                pdfContainer.classList.remove('hidden');
-            } else {
-                pdfContainer.classList.add('hidden');
-            }
-
+                if (pdf) {
+                    const pdfUrl = `/storage/${pdf}`;
+                    pdfViewer.src = pdfUrl;
+                    pdfLink.href = pdfUrl;
+                    pdfContainer.classList.remove('hidden');
+                } else {
+                    pdfContainer.classList.add('hidden');
+                }
+            });
         });
-    });
 
-    // Función para sacar ID de YouTube
-    function extractYoutubeId(url) {
-        const regExp = /(?:youtube\.com\/.*v=|youtu\.be\/)([^&]+)/;
-        const match = url.match(regExp);
-        return match ? match[1] : url;
-    }
+        // YouTube ID
+        function extractYoutubeId(url) {
+            const regExp = /(?:youtube\.com\/.*v=|youtu\.be\/)([^&]+)/;
+            const match = url.match(regExp);
+            return match ? match[1] : '';
+        }
+
+        // Vimeo ID
+        function extractVimeoId(url) {
+            const match = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+            return match ? match[1] : '';
+        }
+
+        // 🔥 AUTO CARGAR LA LECCIÓN ACTIVA AL ENTRAR
+        const activeLesson = document.querySelector('.lesson-item.text-orange-600');
+        if (activeLesson) activeLesson.click();
+
     </script>
 
 </x-app-layout>

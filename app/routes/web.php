@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\WebpayController; // 👈 FALTABA ESTA
@@ -10,6 +11,7 @@ use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminStudentController;
 use App\Http\Controllers\LessonViewController;
 use App\Models\Course;
+use App\Models\Lesson;
 
 
 // ⭐ Home pública
@@ -160,20 +162,62 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::post('/curso/{course:slug}/leccion/{lesson}/completar', [\App\Http\Controllers\LessonProgressController::class, 'store'])
-    ->name('lesson.complete');
+    // ✅ Completar lección (BD)
+    Route::post(
+        '/curso/{course:slug}/leccion/{lesson}/completar',
+        [\App\Http\Controllers\LessonProgressController::class, 'store']
+    )->name('lesson.complete');
 
 });
 
-// Ruta Dinámica
-Route::get('/mis-cursos/{course}', function (Course $course) {
+// Ruta Dinámica (con lección actual)
+Route::get('/mis-cursos/{course}', function (Request $request, Course $course) {
+
     // Cargamos módulos + lecciones ordenadas
     $course->load([
         'modules.lessons' => function ($q) {
             $q->orderBy('order');
         }
     ]);
-    return view('student.curso_detalle', compact('course'));
+
+    // 1) Si viene ?lesson=ID intentamos usar esa lección (solo si pertenece a este curso)
+    $lessonId = $request->query('lesson');
+    $currentLesson = null;
+
+    if ($lessonId) {
+        $currentLesson = Lesson::where('id', $lessonId)
+            ->whereHas('module', function ($q) use ($course) {
+                $q->where('course_id', $course->id);
+            })
+            ->first();
+    }
+
+    // 2) Fallback: primera lección del primer módulo
+    if (!$currentLesson) {
+        $currentLesson = optional($course->modules->first())->lessons->first();
+    }
+
+    $user = auth()->user();
+
+    // Total de lecciones del curso
+    $totalLessons = $course->modules->sum(function ($module) {
+        return $module->lessons->count();
+    });
+
+    // IDs de lecciones de este curso
+    $lessonIds = $course->modules->flatMap->lessons->pluck('id');
+
+    // Cuántas completó este usuario
+    $completedLessons = $user->completedLessons()
+        ->whereIn('lesson_id', $lessonIds)
+        ->count();
+
+    $progress = $totalLessons > 0
+        ? round(($completedLessons / $totalLessons) * 100)
+        : 0;
+
+    return view('student.curso_detalle', compact('course', 'currentLesson', 'progress'));
+
 })->middleware('auth')->name('curso.ver');
 
 // Ruta vista publica cursos
