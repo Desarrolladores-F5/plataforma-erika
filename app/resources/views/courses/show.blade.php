@@ -54,14 +54,34 @@
                 </div>
 
                 {{-- CTA principal --}}
-                <a href="{{ route('mi.espacio') }}"
-                    class="inline-flex items-center justify-center px-8 py-4 rounded-2xl font-semibold
-                            text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
-                        style="background: var(--brand); color: #fff;"
-                        onmouseover="this.style.background='var(--brand-hover)'; this.style.color='#fff';"
-                        onmouseout="this.style.background='var(--brand)'; this.style.color='#fff';">
-                        Acceder / Comprar (demo)
-                </a>
+                @auth
+                    @php
+                        $hasAccess = auth()->user()->orders()
+                            ->where('course_id', $course->id)
+                            ->where('status', 'pagado')
+                            ->exists();
+                    @endphp
+
+                    @if($hasAccess)
+                        <a href="{{ route('curso.ver', $course->id) }}"
+                        class="inline-flex items-center justify-center px-8 py-4 rounded-2xl font-semibold text-white shadow-lg transition hover:scale-105 hover:shadow-xl"
+                        style="background: var(--brand);">
+                            Ir al curso
+                        </a>
+                    @else
+                        <a href="{{ route('checkout.iniciar', $course->slug) }}"
+                            class="inline-flex items-center justify-center px-8 py-4 rounded-2xl font-semibold text-white shadow-lg transition hover:scale-105"
+                            style="background: var(--brand);">
+                            Comprar curso
+                        </a>
+                    @endif
+                @else
+                    <a href="{{ route('login') }}"
+                    class="inline-flex items-center justify-center px-8 py-4 rounded-2xl font-semibold text-white shadow-lg transition hover:scale-105 hover:shadow-xl"
+                    style="background: var(--brand);">
+                        Inicia sesión para comprar
+                    </a>
+                @endauth
 
             </div>
         </div>
