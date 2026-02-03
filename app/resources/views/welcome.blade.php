@@ -215,16 +215,6 @@
         grid-template-columns: 1fr;
       }
 
-      /* Curso destacado en una columna */
-      .curso .wrap{
-        grid-template-columns: 1fr;
-      }
-
-      /* Cards de cursos demo una bajo otra */
-      #cursos .grid-3{
-        grid-template-columns: 1fr;
-      }
-
       /* Footer en una columna */
       .footer-grid{
         grid-template-columns: 1fr;
@@ -238,6 +228,79 @@
         border-radius: 14px;
     }
 
+    .hero-card--curso{
+      height: 280px;          /* ajusta: 220 / 260 / 280 / 320 */
+      overflow: hidden;
+      border-radius: 18px;    /* para que quede pro */
+    }
+
+    .hero-img--curso{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;      /* recorte elegante */
+      display: block;
+    }
+
+    .hero-card--perfil {
+    max-width: 320px;
+    border-radius: 20px;
+    overflow: hidden;
+    }
+
+    .hero-img--perfil {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-img {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    }
+
+    .card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .courses-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 360px));
+    gap:22px;
+    justify-content:center;  /* centra cuando hay 1 o pocas cards */
+    align-items:stretch;
+  }
+
+  .course-thumb{
+    width:100%;
+    height:200px;
+    object-fit:cover;
+    border-radius:12px;
+    display:block;
+    margin-bottom:12px;
+  }
+
+  .card.placeholder{
+    text-align:left;
+    padding:24px;
+    position:relative;
+  }
+
+  .badge{
+    display:inline-block;
+    margin-top:12px;
+    padding:6px 10px;
+    border-radius:999px;
+    font-size:12px;
+    background:#FFE8D6;
+    color:#9A4A00;
+    font-weight:600;
+  }
   </style>
 </head>
 <body>
@@ -270,7 +333,7 @@
         </div>
       </div>
       <div class="hero-card hero-img">
-        <img src="https://images.unsplash.com/photo-1471879832106-c7ab9e0cee23?auto=format&fit=crop&w=1400&q=80" alt="Cielo sereno">
+        <img src="{{ asset('images/portada.jpeg') }}" alt="Portada Erika Herrera">
       </div>
     </div>
   </section>
@@ -298,9 +361,11 @@
 
   <section id="ver-mas" class="curso">
     <div class="container wrap">
-      <div class="hero-card">
-        <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1200&q=80" alt="Naturaleza amanecer">
+      <div class="hero-card hero-card--curso">
+        <img class="hero-img--curso"
+             src="{{ asset('images/curso_destacado.jpeg') }}" alt="Curso destacado">             
       </div>
+
       <div>
         <span class="tag">Curso destacado</span>
         <h2 style="margin:8px 0 10px">Aprendizaje y Desarrollo Personal</h2>
@@ -325,8 +390,10 @@
 
   <section id="conoceme" class="features" style="padding-top:0">
     <div class="container card" style="display:grid;grid-template-columns: 1fr 1.4fr;gap:22px;align-items:center">
-      <div>
-        <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=900&q=80" alt="Erika / retrato simbólico" style="border-radius:14px">
+      <div class="hero-card hero-card--perfil">
+          <img class="hero-img--perfil"
+              src="{{ asset('images/placeholder_erika.png') }}"
+              alt="Foto de Erika Herrera">
       </div>
       <div>
         <h3 style="font-size:24px">Conóceme</h3>
@@ -350,31 +417,49 @@
     </div>
   </section>
 
-  <section id="cursos" class="features" style="padding-top:0">
+  <section class="cursos">
     <div class="container">
-      <h2 style="font-size:26px;margin-bottom:18px">Cursos y entrenamientos</h2>
-      <div class="grid-3">
-        <div class="card">
-          <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80" alt="Curso 1" style="border-radius:14px;margin-bottom:10px">
-          <h3>Comunicación efectiva para equipos</h3>
-          <p class="muted">Mejora coordinación, confianza y productividad.</p>
-          <div style="margin-top:10px"><a class="btn" href="maqueta_curso_detalle.html">Ver más</a></div>
-        </div>
-        <div class="card">
-          <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=900&q=80" alt="Curso 2" style="border-radius:14px;margin-bottom:10px">
-          <h3>Autoconocimiento y bienestar</h3>
-          <p class="muted">Cambia paradigmas, creencias y hábitos.</p>
-          <div style="margin-top:10px"><a class="btn" href="maqueta_curso_detalle.html">Ver más</a></div>
-        </div>
-        <div class="card">
-          <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=900&q=80" alt="Curso 3" style="border-radius:14px;margin-bottom:10px">
-          <h3>Liderazgo con PNL</h3>
-          <p class="muted">Herramientas para conducir equipos con conciencia.</p>
-          <div style="margin-top:10px"><a class="btn" href="maqueta_curso_detalle.html">Ver más</a></div>
-        </div>
+
+      <h2 style="margin-bottom:16px;">Cursos y entrenamientos</h2>
+
+      <div class="courses-grid">
+        @forelse($courses as $course)
+          <div class="card">
+
+            <img
+              src="{{ $course->thumbnail ? asset('storage/'.$course->thumbnail) : asset('images/curso_default.jpg') }}"
+              alt="{{ $course->title }}"
+              class="course-thumb">
+
+            <h3>{{ $course->title }}</h3>
+
+            <p class="muted">
+              {{ \Illuminate\Support\Str::limit($course->description ?? '', 80) }}
+            </p>
+
+            <a href="{{ route('curso.detalle', $course->slug) }}" class="btn">
+              Ver más
+            </a>
+
+          </div>
+        @empty
+
+          {{-- Placeholder bonito si no hay cursos publicados --}}
+          <div class="card placeholder">
+            <h3>Pronto tendremos novedades ✨</h3>
+            <p class="muted">
+              Estamos preparando nuevos cursos y entrenamientos. ¡Atento/a a los próximos lanzamientos!
+            </p>
+            <span class="badge">Próximamente</span>
+          </div>
+
+        @endforelse
       </div>
+
     </div>
   </section>
+
+
   
   <footer>
   <div class="container footer-grid">

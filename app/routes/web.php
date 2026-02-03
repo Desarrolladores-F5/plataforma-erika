@@ -15,9 +15,7 @@ use App\Models\Lesson;
 
 
 // ⭐ Home pública
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [CourseController::class, 'home'])->name('home');
 
 // ⭐ Espacio inteligente
 Route::get('/mi-espacio', function () {

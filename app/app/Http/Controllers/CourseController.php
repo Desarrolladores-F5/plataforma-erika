@@ -7,6 +7,21 @@ use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
+
+    /**
+     * Página principal (landing) - welcome.blade.php
+     */
+    public function home()
+    {
+        $courses = Course::where('is_published', true)
+            ->where('is_demo', false)   // 👈 NO mostrar cursos de prueba
+            ->latest()
+            ->take(6)           // 👈 SOLO 1 curso, si quiero que muestre 2, pongo 2
+            ->get();
+
+        return view('welcome', compact('courses'));
+    }
+
     /**
      * Muestra el detalle de un curso a partir de su slug.
      */
@@ -29,7 +44,7 @@ class CourseController extends Controller
         }
 
         // Vista del alumno, dentro de /views/student
-        return view('student.curso_detalle', compact('course', 'userHasAccess'));
+        return view('courses.show', compact('course', 'userHasAccess'));
     }
 
     public function iniciarCompra($slug)
