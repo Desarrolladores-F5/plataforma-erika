@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\AdminStudentController;
 use App\Http\Controllers\LessonViewController;
 use App\Models\Course;
 use App\Models\Lesson;
+use App\Http\Controllers\CertificadoController;
 
 
 // ⭐ Home pública
@@ -160,13 +161,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    // ✅ Completar lección (BD)
-    Route::post(
-        '/curso/{course:slug}/leccion/{lesson}/completar',
-        [\App\Http\Controllers\LessonProgressController::class, 'store']
-    )->name('lesson.complete');
+
+// ✅ Completar lección (BD)
+Route::post('/curso/{course:slug}/leccion/{lesson}/completar',
+    [\App\Http\Controllers\LessonProgressController::class, 'store']
+    )
+    ->name('lesson.complete');
 
 });
+
+// ✅ Para ver el tema de el certificado cuando complete los cursos
+Route::get('/mi-curso/{slug}', [\App\Http\Controllers\CourseController::class, 'ver'])
+    ->middleware('auth')
+    ->name('curso.ver');
 
 // Ruta Dinámica (con lección actual)
 Route::get('/mis-cursos/{course}', function (Request $request, Course $course) {
@@ -222,6 +229,12 @@ Route::get('/mis-cursos/{course}', function (Request $request, Course $course) {
 Route::get('/cursos/{course:slug}', function (Course $course) {
     return view('courses.show', compact('course'));
 })->name('courses.show');
+
+// Ruta para la descarga de los certificados al finalizar el curso
+Route::middleware(['auth'])->group(function () {
+    Route::get('/certificado/{course}', [CertificadoController::class, 'descargar'])
+        ->name('certificado.descargar');
+});
 
 // ⭐ Breeze (auth)
 require __DIR__.'/auth.php';

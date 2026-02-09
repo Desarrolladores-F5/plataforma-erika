@@ -33,7 +33,7 @@ class LessonProgressController extends Controller
         ]);
 
         return redirect()
-            ->route('curso.ver', $course->id)
+            ->route('curso.ver', $course->slug)
             ->with('success', 'Lección marcada como completada ✅');
     }
 }

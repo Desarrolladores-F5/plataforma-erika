@@ -97,9 +97,9 @@
                                 </div>
                             </div>
 
-                            <a href="{{ route('curso.ver', $course->id) }}"
+                            <a href="{{ route('curso.ver', $course->slug) }}"
                                class="mt-auto inline-flex items-center justify-center px-4 py-2 rounded-lg font-semibold text-white brand-cta"
-                               style="background: {{ $ctaColor }};">                                                            
+                               style="background: {{ $ctaColor }};">
                                 {{ $ctaText }}
                             </a>
 

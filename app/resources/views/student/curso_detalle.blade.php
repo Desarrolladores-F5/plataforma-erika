@@ -140,12 +140,39 @@
                             Marcar como completada
                         </button>
                     </form>
-
-
                 </div>
             </main>
 
         </div>
+
+       @if($courseCompleted)
+            <div class="mt-12 p-6 rounded-xl bg-green-50 border border-green-300 text-center">
+
+                <h3 class="text-2xl font-bold text-green-800 mb-2">
+                    🎉 Felicitaciones, has completado el curso
+                </h3>
+
+                <p class="text-green-700 mb-4">
+                    Has finalizado exitosamente el curso
+                    <strong>{{ $course->title }}</strong>.
+                </p>
+
+                <a href="{{ route('certificado.descargar', $course->id) }}"
+                class="inline-block px-6 py-3 bg-orange-500 text-white
+                        font-semibold rounded-lg hover:bg-orange-600 transition"
+                target="_blank">
+                    🧾 Descargar Certificado
+                </a>
+
+                <p class="mt-4 text-sm text-gray-700">
+                    📞 Para coordinar tu sesión personalizada de coaching con
+                    <strong>Erika Herrera</strong>, contáctala directamente al:<br>
+                    <strong>+56 9 54082624</strong>
+                </p>
+
+            </div>
+        @endif
+
     </div>
 
     <script>

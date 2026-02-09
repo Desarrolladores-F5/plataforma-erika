@@ -43,8 +43,79 @@ class CourseController extends Controller
                 ->exists();
         }
 
+        // 🧠 3️⃣ AQUÍ VA EL BLOQUE NUEVO (curso completado)
+        $courseCompleted = false;
+
+        if (auth()->check()) {
+            $totalLessons = $course->modules
+                ->flatMap->lessons
+                ->count();
+
+            $completedLessons = auth()->user()
+                ->completedLessons()
+                ->whereIn(
+                    'lessons.id',
+                    $course->modules->flatMap->lessons->pluck('id')
+                )
+                ->count();
+
+            if ($totalLessons > 0 && $completedLessons === $totalLessons) {
+                $courseCompleted = true;
+            }
+        }
+
         // Vista del alumno, dentro de /views/student
-        return view('courses.show', compact('course', 'userHasAccess'));
+        return view('courses.show', compact(
+            'course',
+            'userHasAccess',
+            'courseCompleted'
+        ));
+    }
+
+    public function ver(string $slug)
+    {
+        $course = Course::where('slug', $slug)
+            ->where('is_published', true)
+            ->with(['modules.lessons'])
+            ->firstOrFail();
+
+        // Debe estar logueado (igual lo protegemos por ruta)
+        $user = auth()->user();
+
+        // Acceso al curso (pago)
+        $userHasAccess = $user->orders()
+            ->where('course_id', $course->id)
+            ->where('status', 'pagado')
+            ->exists();
+
+        // IDs de lecciones del curso
+        $lessonIds = $course->modules->flatMap->lessons->pluck('id');
+
+        $totalLessons = $lessonIds->count();
+
+        // Lecciones completadas por el usuario (pivot completed_at)
+        $completedLessons = $user->completedLessons()
+            ->whereIn('lessons.id', $lessonIds)
+            ->count();
+
+        // Progreso
+        $progress = $totalLessons > 0
+            ? round(($completedLessons / $totalLessons) * 100)
+            : 0;
+
+        // Curso completado
+        $courseCompleted = $totalLessons > 0 && $completedLessons >= $totalLessons;
+
+        // (Opcional) si tu JS necesita una lección inicial
+        $currentLesson = $course->modules->flatMap->lessons->first();
+
+        return view('student.curso_detalle', compact(
+            'course',
+            'userHasAccess',
+            'progress',
+            'courseCompleted',
+            'currentLesson'
+        ));
     }
 
     public function iniciarCompra($slug)
