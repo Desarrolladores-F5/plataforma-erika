@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use App\Mail\BienvenidaUsuario;
+use Illuminate\Support\Facades\Mail;
 
 class RegisteredUserController extends Controller
 {
@@ -42,18 +44,20 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-
-            // 👇 NUEVOS CAMPOS
             'gender' => $request->gender,
             'birth_date' => $request->birth_date,
             'comuna' => $request->comuna,
-
-            // rol por defecto
             'role' => 'student',
-
         ]);
 
         event(new Registered($user));
+
+        // 👇 ENVÍO DEL CORREO DE BIENVENIDA
+        try {
+            Mail::to($user->email)->send(new BienvenidaUsuario($user));
+        } catch (\Throwable $e) {
+            \Log::error('Error enviando correo de bienvenida: ' . $e->getMessage());
+        }
 
         Auth::login($user);
 
