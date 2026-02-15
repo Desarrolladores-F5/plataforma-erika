@@ -591,3 +591,13 @@
   </script>
 </body>
 </html>
+
+
+
+
+
+{{-- 
+🙏 Agradecimiento
+"Pon en manos del Señor todas tus obras, y tus proyectos se cumplirán."
+— Proverbios 16:3
+--}}
