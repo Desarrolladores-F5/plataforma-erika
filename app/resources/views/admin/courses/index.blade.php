@@ -58,27 +58,28 @@
                             @endif
                         </td>
 
-                        <td class="p-3 text-right">
-                            
-                            {{-- Editar --}}
-                            <a href="{{ route('admin.courses.edit', $course) }}"
-                               class="px-3 py-1 rounded border">
-                                Editar
-                            </a>
+                       <td class="p-3 text-right">
+                            <div class="inline-flex items-center gap-2">
+                                {{-- Editar --}}
+                                <a href="{{ route('admin.courses.edit', $course) }}"
+                                class="px-3 py-1 rounded border">
+                                    Editar
+                                </a>
 
-                            {{-- Eliminar --}}
-                            <form action="{{ route('admin.courses.destroy', $course) }}"
-                                method="POST"
-                                class="inline-block"
-                                onsubmit="return confirm('¿Seguro que deseas eliminar este curso?')">
-                                @csrf
-                                @method('DELETE')
+                                {{-- Eliminar --}}
+                                <form action="{{ route('admin.courses.destroy', $course) }}"
+                                    method="POST"
+                                    class="inline-block"
+                                    onsubmit="return confirm('¿Seguro que deseas eliminar este curso?')">
+                                    @csrf
+                                    @method('DELETE')
 
-                                <button type="submit"
-                                        class="px-3 py-1 rounded border border-red-300 text-red-600 hover:bg-red-50">
-                                    Eliminar
-                                </button>
-                            </form>
+                                    <button type="submit"
+                                            class="px-3 py-1 rounded border border-red-300 text-red-600 hover:bg-red-50">
+                                        Eliminar
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 @empty

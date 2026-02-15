@@ -304,6 +304,26 @@ button[type="submit"]:hover {
   transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
 }
 
+/* Botón CTA dinámico (Revisar, Continuar, Empezar) */
+.brand-cta {
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  display: inline-flex;
+}
+
+.brand-cta:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.15);
+}
+
+.brand-cta:active {
+  transform: scale(1.02);
+}
+
+.brand-cta:hover {
+  color: #fff !important;
+  text-decoration: none;
+}
+
 .brand-btn:hover {
   /* hover notorio sin perder legibilidad */
   transform: translateY(-1px);
@@ -337,6 +357,12 @@ button[type="submit"]:hover {
   /* Quita sombras en impresión (opcional pero recomendado) */
   .shadow, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl {
     box-shadow: none !important;
+  }
+
+  /* El boton que revisa el curso en Mis Cursos */
+  .brand-cta:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.12);
   }
   
 }

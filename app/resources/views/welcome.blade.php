@@ -188,8 +188,8 @@
       }
 
       .hero h1{
-    font-size: 28px;
-  }
+        font-size: 28px;
+      }
 
       .hero p{
         font-size: 16px;
@@ -274,24 +274,24 @@
     gap:22px;
     justify-content:center;  /* centra cuando hay 1 o pocas cards */
     align-items:stretch;
-  }
+    }
 
-  .course-thumb{
+    .course-thumb{
     width:100%;
     height:200px;
     object-fit:cover;
     border-radius:12px;
     display:block;
     margin-bottom:12px;
-  }
+    }
 
-  .card.placeholder{
+    .card.placeholder{
     text-align:left;
     padding:24px;
     position:relative;
-  }
+    }
 
-  .badge{
+    .badge{
     display:inline-block;
     margin-top:12px;
     padding:6px 10px;
@@ -300,7 +300,56 @@
     background:#FFE8D6;
     color:#9A4A00;
     font-weight:600;
-  }
+    }
+
+    .nav-actions{
+      list-style:none;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin:0;
+      padding:0;
+    }
+
+    .nav-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+
+      padding:10px 16px;
+      border-radius:999px;
+
+      font-weight:600;
+      text-decoration:none;
+
+      /* dejamos colores fijos (no cambian en hover) */
+      background:#fff;
+      color:#111;
+
+      border:1px solid rgba(0,0,0,.12);
+
+      /* animación */
+      transform: translateZ(0);
+      transition: transform .18s ease, box-shadow .18s ease;
+      will-change: transform;
+    }
+
+    .nav-btn:hover{
+      transform: scale(1.05);
+      box-shadow: 0 10px 18px rgba(0,0,0,.08);
+    }
+
+    .nav-btn:active{
+      transform: scale(1.02);
+    }
+
+    /* Botón principal (Tu Espacio) */
+    .nav-btn.is-primary{
+      background: var(--brand);
+      color:#fff;
+      border-color: transparent;
+    }
+
   </style>
 </head>
 <body>
@@ -311,10 +360,10 @@
           {{-- Logo en base64 tal como en tu maqueta --}}
           <img src="https://erikaherrera.cl/imagenes/logo2.svg" alt="Erika Herrera" style="height:58px;width:auto;">
         </div>
-        <ul>
-          <li><a href="#conoceme">Conóceme</a></li>          
-          <a class="login" href="{{ route('mi.espacio') }}">Tu Espacio</a>
-          <li><a class="register" href="{{ route('register') }}">Crear cuenta</a></li>
+        <ul class="nav-actions">
+          <li><a class="nav-btn" href="#conoceme">Conóceme</a></li>
+          <li><a class="nav-btn is-primary" href="{{ route('mi.espacio') }}">Tu Espacio</a></li>
+          <li><a class="nav-btn" href="{{ route('register') }}">Crear cuenta</a></li>
         </ul>
       </nav>
     </div>

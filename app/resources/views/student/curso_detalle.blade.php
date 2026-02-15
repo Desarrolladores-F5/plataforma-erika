@@ -158,10 +158,13 @@
                 </p>
 
                 <a href="{{ route('certificado.descargar', $course->id) }}"
-                class="inline-block px-6 py-3 bg-orange-500 text-white
-                        font-semibold rounded-lg hover:bg-orange-600 transition"
-                target="_blank">
-                    🧾 Descargar Certificado
+                    target="_blank"
+                    class="inline-flex items-center justify-center gap-2
+                            px-6 py-3 rounded-lg font-semibold
+                            bg-orange-500 text-white
+                            transition-transform duration-150
+                            hover:bg-orange-600 hover:scale-105 hover:text-white">
+                    🧾 <span class="text-white hover:text-white">Descargar Certificado</span>
                 </a>
 
                 <p class="mt-4 text-sm text-gray-700">
