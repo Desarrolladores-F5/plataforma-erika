@@ -67,18 +67,40 @@
                                 </a>
 
                                 {{-- Eliminar --}}
-                                <form action="{{ route('admin.courses.destroy', $course) }}"
-                                    method="POST"
-                                    class="inline-block"
-                                    onsubmit="return confirm('¿Seguro que deseas eliminar este curso?')">
-                                    @csrf
-                                    @method('DELETE')
+                                <div x-data="{ open: false }" class="inline-block">
 
-                                    <button type="submit"
-                                            class="px-3 py-1 rounded border border-red-300 text-red-600 hover:bg-red-50">
-                                        Eliminar
-                                    </button>
-                                </form>
+                                    <form
+                                        x-ref="deleteForm"
+                                        action="{{ route('admin.courses.destroy', $course) }}"
+                                        method="POST"
+                                        class="inline-block"
+                                    >
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button
+                                            type="button"
+                                            @click="open = true"
+                                            class="px-3 py-1 rounded border border-red-300 text-red-600 hover:bg-red-50 transition"
+                                        >
+                                            Eliminar
+                                        </button>
+                                    </form>
+
+                                    <x-admin.confirm-delete-modal
+                                        title="Eliminar curso"
+                                        message="¿Estás seguro de que deseas eliminar este curso?"
+                                    >
+                                        <button
+                                            type="button"
+                                            @click="$refs.deleteForm.submit()"
+                                            class="px-5 py-2.5 rounded-xl bg-red-600 text-white font-semibold hover:bg-red-700 transition"
+                                        >
+                                            🗑 Sí, eliminar curso
+                                        </button>
+                                    </x-admin.confirm-delete-modal>
+
+                                </div>
                             </div>
                         </td>
                     </tr>

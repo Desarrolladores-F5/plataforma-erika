@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-guest-layout maxWidth="2xl">
     <form method="POST" action="{{ route('register') }}">
         @csrf
 

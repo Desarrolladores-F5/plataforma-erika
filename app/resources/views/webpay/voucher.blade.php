@@ -82,19 +82,29 @@
                 <div class="flex gap-3">
                     {{-- IMPRIMIR --}}
                     <button onclick="window.print()"
-                            class="px-4 py-2 border rounded-lg text-gray-700 hover:bg-gray-100">
+                            class="px-4 py-2 border rounded-lg text-gray-700
+                                hover:bg-gray-100
+                                transition-all duration-300
+                                hover:scale-105 hover:shadow-lg">
                         🖨 Imprimir
                     </button>
 
                     {{-- PDF (placeholder) --}}
                     <a href="{{ route('orders.pdf', $order) }}"
-                       class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+                        class="px-4 py-2 border rounded-lg
+                            hover:bg-gray-100
+                            transition-all duration-300
+                            hover:scale-105 hover:shadow-lg">
                         📄 Descargar PDF
                     </a>
 
                     {{-- IR AL CURSO --}}
                     <a href="{{ route('curso.detalle', $order->course->slug) }}"
-                       class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                        class="px-6 py-2 rounded-lg text-white
+                            hover:text-white focus:text-white active:text-white
+                            transition-all duration-300
+                            hover:scale-105 hover:shadow-lg"
+                        style="background: var(--brand);">
                         Ir al curso
                     </a>
                 </div>

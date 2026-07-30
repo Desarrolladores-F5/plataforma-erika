@@ -15,9 +15,14 @@
 
             {{-- Imagen del curso --}}
             <div class="rounded-3xl overflow-hidden shadow-2xl card-appear">
+                
                 <img
-                    src="{{ $course->banner_url ?: 'https://picsum.photos/seed/demo-banner/1200/800' }}"
-                    alt="Portada del curso"
+                    src="{{ $course->banner_url
+                        ? asset('storage/' . $course->banner_url)
+                        : ($course->thumbnail
+                            ? asset('storage/' . $course->thumbnail)
+                            : 'https://picsum.photos/seed/demo-banner/1200/800') }}"
+                    alt="Portada del curso {{ $course->title }}"
                     class="w-full h-full object-cover hover:scale-105 transition duration-700"
                 >
             </div>
@@ -63,7 +68,7 @@
                     @endphp
 
                     @if($hasAccess)
-                        <a href="{{ route('curso.ver', $course->id) }}"
+                        <a href="{{ route('curso.ver', $course->slug) }}"
                         class="inline-flex items-center justify-center px-8 py-4 rounded-2xl font-semibold text-white shadow-lg transition hover:scale-105 hover:shadow-xl"
                         style="background: var(--brand);">
                             Ir al curso
@@ -76,9 +81,20 @@
                         </a>
                     @endif
                 @else
-                    <a href="{{ route('login') }}"
-                    class="inline-flex items-center justify-center px-8 py-4 rounded-2xl font-semibold text-white shadow-lg transition hover:scale-105 hover:shadow-xl"
-                    style="background: var(--brand);">
+                   <a href="{{ route('login') }}"
+                      class="inline-flex items-center justify-center
+                            px-8 py-4 rounded-2xl
+                            font-semibold
+                            text-white
+                            hover:text-white
+                            focus:text-white
+                            active:text-white
+                            visited:text-white
+                            shadow-lg
+                            transition
+                            hover:scale-105
+                            hover:shadow-xl"
+                        style="background: var(--brand);">
                         Inicia sesión para comprar
                     </a>
                 @endauth

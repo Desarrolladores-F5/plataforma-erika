@@ -1,3 +1,7 @@
+@props([
+    'maxWidth' => 'md',
+])
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -28,7 +32,7 @@
         </div>
 
         <!-- Auth Card -->
-        <div class="w-full sm:max-w-md px-6 py-6 bg-white border border-gray-200 rounded-lg mb-8">
+        <div class="w-full sm:max-w-{{ $maxWidth }} px-6 py-6 bg-white border border-gray-200 rounded-lg mb-8">
             {{ $slot }}
         </div>
     </div>
