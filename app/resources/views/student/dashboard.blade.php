@@ -19,21 +19,29 @@
                 </div>
             @else
 
-                <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {{-- ========================================================= --}}
+                {{-- TARJETAS DE MIS CURSOS --}}
+                {{-- ========================================================= --}}
+
+                <div class="grid gap-8 md:grid-cols-2">
                     @foreach($courses as $i => $course)
+
                         @php
-                            // Placeholder visual hasta conectar a BD real
+                            // Total de lecciones del curso
                             $totalLessons = $course->modules->sum(function ($module) {
                                 return $module->lessons->count();
                             });
 
+                            // IDs de las lecciones del curso
                             $lessonIds = $course->modules->flatMap->lessons->pluck('id');
 
+                            // Lecciones completadas por el alumno
                             $completedLessons = auth()->user()
                                 ->completedLessons()
                                 ->whereIn('lesson_id', $lessonIds)
                                 ->count();
 
+                            // Porcentaje de progreso
                             $progress = $totalLessons > 0
                                 ? round(($completedLessons / $totalLessons) * 100)
                                 : 0;
@@ -42,7 +50,7 @@
                             if ($progress >= 90) {
                                 $statusText = 'Completado';
                                 $statusClasses = 'bg-green-100 text-green-700';
-                                $statusIcon = '✅';
+                                $statusIcon = '✓';
                             } elseif ($progress >= 20) {
                                 $statusText = 'En progreso';
                                 $statusClasses = 'bg-blue-100 text-blue-700';
@@ -56,54 +64,143 @@
                             // CTA inteligente
                             if ($progress >= 90) {
                                 $ctaText = 'Revisar';
-                                $ctaColor = '#64748b'; // gris elegante
+                                $ctaColor = '#64748b';
                             } elseif ($progress >= 20) {
                                 $ctaText = 'Continuar';
-                                $ctaColor = 'var(--brand)'; // naranjo Erika
+                                $ctaColor = 'var(--brand)';
                             } else {
                                 $ctaText = 'Empezar';
-                                $ctaColor = '#16a34a'; // verde inicio
+                                $ctaColor = '#16a34a';
                             }
-
                         @endphp
 
-                        <div class="brand-card card-appear stagger bg-white p-6 flex flex-col" style="--i: {{ $i }};">
 
-                            {{-- Badge --}}
-                            <span class="inline-flex items-center gap-2 mb-3 px-3 py-1 text-xs font-semibold rounded-full {{ $statusClasses }}">
-                                {{ $statusIcon }} {{ $statusText }}
-                            </span>
+                        {{-- Tarjeta del curso --}}
+                        <article
+                            class="brand-card card-appear stagger group
+                                relative overflow-hidden
+                                bg-white border border-gray-200
+                                rounded-2xl shadow-sm
+                                flex flex-col
+                                transition-all duration-300 ease-out
+                                hover:-translate-y-2
+                                hover:shadow-xl"
+                            style="--i: {{ $i }};"
+                        >
 
-
-                            <h3 class="text-lg font-semibold mb-2">
-                                {{ $course->title }}
-                            </h3>
-
-                            <p class="text-gray-600 text-sm mb-4">
-                                {{ $course->description }}
-                            </p>
-
-                            {{-- Progreso visual --}}
-                            <div class="mb-4">
-                                <div class="flex items-center justify-between text-xs text-gray-600 mb-1">
-                                    <span>Progreso</span>
-                                    <span>{{ $progress }}%</span>
-                                </div>
-
-                                <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                                    <div class="h-2 rounded-full transition-all duration-500"
-                                         style="width: {{ $progress }}%; background: #22c55e;">
-                                    </div>
-                                </div>
+                            {{-- Acento superior de marca --}}
+                            <div
+                                class="absolute top-0 left-0 w-full h-1
+                                    transition-all duration-300 ease-out
+                                    group-hover:h-1.5"
+                                style="background: var(--brand);">
                             </div>
 
-                            <a href="{{ route('curso.ver', $course->slug) }}"
-                               class="mt-auto inline-flex items-center justify-center px-4 py-2 rounded-lg font-semibold text-white brand-cta"
-                               style="background: {{ $ctaColor }};">
-                                {{ $ctaText }}
-                            </a>
+                            {{-- Contenido principal --}}
+                            <div class="p-7 flex flex-col flex-1">
 
-                        </div>
+                                {{-- Estado --}}
+                                <div class="mb-5">
+                                    <span
+                                        class="inline-flex items-center gap-2
+                                            px-3 py-1.5
+                                            text-xs font-semibold
+                                            rounded-full
+                                            {{ $statusClasses }}"
+                                    >
+                                        <span>{{ $statusIcon }}</span>
+                                        <span>{{ $statusText }}</span>
+                                    </span>
+                                </div>
+
+
+                                {{-- Información del curso --}}
+                                <div class="mb-6">
+
+                                    <h3 class="text-xl font-bold text-gray-900 leading-tight mb-3">
+                                        {{ $course->title }}
+                                    </h3>
+
+                                    <p class="text-gray-600 text-sm leading-relaxed">
+                                        {{ $course->description }}
+                                    </p>
+
+                                </div>
+
+
+                                {{-- Separador --}}
+                                <div class="border-t border-gray-100 mt-auto pt-5">
+
+                                    {{-- Progreso --}}
+                                    <div class="mb-5">
+
+                                        <div class="flex items-end justify-between mb-2">
+
+                                            <div>
+                                                <p class="text-sm font-semibold text-gray-800">
+                                                    Progreso del curso
+                                                </p>
+
+                                                <p class="text-xs text-gray-500 mt-0.5">
+                                                    @if($progress >= 90)
+                                                        Curso completado
+                                                    @elseif($progress >= 20)
+                                                        Continúa donde lo dejaste
+                                                    @else
+                                                        Todo listo para comenzar
+                                                    @endif
+                                                </p>
+                                            </div>
+
+                                            <span class="text-lg font-bold text-gray-900">
+                                                {{ $progress }}%
+                                            </span>
+
+                                        </div>
+
+
+                                        {{-- Barra de progreso --}}
+                                        <div class="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
+
+                                            <div
+                                                class="h-full rounded-full transition-all duration-500"
+                                                style="
+                                                    width: {{ $progress }}%;
+                                                    background: #22c55e;
+                                                ">
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    {{-- CTA --}}
+                                    <a
+                                        href="{{ route('curso.ver', $course->slug) }}"
+                                        class="brand-cta
+                                            w-full
+                                            inline-flex items-center justify-center
+                                            px-5 py-3
+                                            rounded-xl
+                                            font-semibold text-white
+                                            transition-all duration-200
+                                            hover:-translate-y-0.5 hover:shadow-md"
+                                        style="background: {{ $ctaColor }};"
+                                    >
+                                        {{ $ctaText }}
+
+                                        @if($progress >= 20 && $progress < 90)
+                                            <span class="ml-2">→</span>
+                                        @endif
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
                     @endforeach
                 </div>
 

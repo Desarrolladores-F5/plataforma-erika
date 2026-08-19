@@ -88,15 +88,31 @@ class CourseController extends Controller
             ->where('status', 'pagado')
             ->exists();
 
-        // IDs de lecciones del curso
-        $lessonIds = $course->modules->flatMap->lessons->pluck('id');
+        // ==========================================================
+        // PROGRESO Y AVANCE SECUENCIAL DEL CURSO
+        // ==========================================================
+
+        // Todas las lecciones del curso respetando el orden
+        // de módulos y lecciones.
+        $allLessons = $course->modules
+            ->flatMap(function ($module) {
+                return $module->lessons;
+            })
+            ->values();
+
+        // IDs de todas las lecciones del curso
+        $lessonIds = $allLessons->pluck('id');
 
         $totalLessons = $lessonIds->count();
 
-        // Lecciones completadas por el usuario (pivot completed_at)
-        $completedLessons = $user->completedLessons()
+        // IDs de las lecciones realmente completadas por el usuario
+        $completedLessonIds = $user->lessons()
             ->whereIn('lessons.id', $lessonIds)
-            ->count();
+            ->whereNotNull('lesson_user.completed_at')
+            ->pluck('lessons.id');
+
+        // Cantidad de lecciones completadas
+        $completedLessons = $completedLessonIds->count();
 
         // Progreso
         $progress = $totalLessons > 0
@@ -104,17 +120,35 @@ class CourseController extends Controller
             : 0;
 
         // Curso completado
-        $courseCompleted = $totalLessons > 0 && $completedLessons >= $totalLessons;
+        $courseCompleted = $totalLessons > 0
+            && $completedLessons >= $totalLessons;
 
-        // (Opcional) si tu JS necesita una lección inicial
-        $currentLesson = $course->modules->flatMap->lessons->first();
+        // ==========================================================
+        // SIGUIENTE LECCIÓN DISPONIBLE
+        // ==========================================================
+
+        // La primera lección no completada será la única lección
+        // pendiente disponible para continuar.
+        $nextLesson = $allLessons->first(function ($lesson) use ($completedLessonIds) {
+            return !$completedLessonIds->contains($lesson->id);
+        });
+
+        $nextLessonId = $nextLesson?->id;
+
+        // Lección inicial:
+        // - Si aún quedan lecciones pendientes, mostramos la siguiente.
+        // - Si terminó el curso, mostramos la primera.
+        $currentLesson = $nextLesson ?? $allLessons->first();
+
 
         return view('student.curso_detalle', compact(
             'course',
             'userHasAccess',
             'progress',
             'courseCompleted',
-            'currentLesson'
+            'currentLesson',
+            'completedLessonIds',
+            'nextLessonId'
         ));
     }
 

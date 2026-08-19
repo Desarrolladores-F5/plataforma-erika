@@ -40,3 +40,6 @@ coverage/
 # (Queremos versionar CSV y SQL, así que NO los ignores)
 # contenido/csv/*.csv        <-- mantener versionado
 # db/*.sql                   <-- mantener versionado
+
+# --- Respaldos locales de base de datos
+/db/backups/

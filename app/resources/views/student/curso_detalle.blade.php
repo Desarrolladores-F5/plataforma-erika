@@ -6,34 +6,89 @@
             {{ session('success') }}
         </div>
     @endif
+
+    {{-- Cabecera del curso --}}
     <div class="py-8 border-b border-gray-200">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            
+
+            {{-- Volver --}}
             <a href="{{ route('mi.espacio') }}"
-              class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold
-                      bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition mb-6">
+            class="inline-flex items-center gap-2
+                    px-4 py-2 mb-7
+                    rounded-full
+                    text-sm font-semibold
+                    bg-white border border-gray-200
+                    text-gray-700
+                    shadow-sm
+                    transition-all duration-200
+                    hover:bg-gray-50 hover:shadow-md hover:-translate-y-0.5">
                 ← Volver a Mis Cursos
             </a>
 
-            <h1 class="text-2xl font-bold text-gray-900">
-                {{ $course->title }}
-            </h1>
-            <p class="text-gray-700 mb-6 leading-relaxed">
-                {{ $course->description }}
-            </p>
+            {{-- Información principal --}}
+            <div class="relative bg-white border border-gray-200 rounded-2xl shadow-sm p-6 md:p-8 overflow-hidden">
 
-            <div class="mt-4">
-                <div class="flex items-center justify-between text-sm text-gray-600 mb-1">
-                    <span>Progreso del curso</span>
-                    <span>{{ $progress }}%</span>
+                {{-- Acento de marca --}}
+                <div class="absolute top-0 left-0 w-full h-1"
+                    style="background: var(--brand);">
                 </div>
 
-                <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div class="h-2 rounded-full transition-all duration-500"
-                        style="width: {{ $progress }}%; background: #22c55e;">
+                <div class="max-w-4xl">
+
+                    <p class="text-sm font-semibold text-orange-600 mb-2">
+                        Mi aprendizaje
+                    </p>
+
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
+                        {{ $course->title }}
+                    </h1>
+
+                    <p class="mt-3 text-gray-600 leading-relaxed">
+                        {{ $course->description }}
+                    </p>
+
+                </div>
+
+                {{-- Progreso --}}
+                <div class="mt-8 pt-6 border-t border-gray-100">
+
+                    <div class="flex items-end justify-between gap-4 mb-3">
+
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">
+                                Progreso del curso
+                            </p>
+
+                            <p class="text-xs text-gray-500 mt-1">
+                                Continúa avanzando a tu ritmo
+                            </p>
+                        </div>
+
+                        <div class="text-right">
+                            <span class="text-2xl font-bold text-gray-900">
+                                {{ $progress }}%
+                            </span>
+
+                            <p class="text-xs text-gray-500">
+                                completado
+                            </p>
+                        </div>
+
                     </div>
+
+                    <div class="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
+
+                        <div
+                            class="h-full rounded-full transition-all duration-500"
+                            style="width: {{ $progress }}%; background: #22c55e;">
+                        </div>
+
+                    </div>
+
                 </div>
+
             </div>
+
         </div>
     </div>
 
@@ -43,7 +98,12 @@
 
             {{-- Sidebar de módulos --}}
             <aside class="lg:col-span-1">
-                <div class="brand-card bg-white p-5 sticky top-24">
+                <div class="relative bg-white border border-gray-200 rounded-2xl shadow-sm p-5 sticky top-24 overflow-hidden">
+
+                    {{-- Acento de marca --}}
+                    <div class="absolute top-0 left-0 w-full h-1"
+                        style="background: var(--brand);">
+                    </div>
 
                     <h2 class="text-lg font-semibold mb-4">Contenido del curso</h2>
 
@@ -58,42 +118,115 @@
                                 @forelse($module->lessons as $lesson)
 
                                     @php
-                                        $isActive = isset($currentLesson) && $currentLesson->id === $lesson->id;
+                                        // ¿Esta lección ya fue completada?
+                                        $isCompleted = $completedLessonIds->contains($lesson->id);
+
+                                        // ¿Esta es la siguiente lección que corresponde realizar?
+                                        $isNext = $nextLessonId === $lesson->id;
+
+                                        // Una lección está disponible si:
+                                        // 1. Ya fue completada, o
+                                        // 2. Es la siguiente que corresponde realizar.
+                                        $isUnlocked = $isCompleted || $isNext;
+
+                                        // Lección que actualmente se está mostrando
+                                        $isActive = isset($currentLesson)
+                                            && $currentLesson->id === $lesson->id;
                                     @endphp
 
                                     <li>
-                                        <a
-                                            href="#"
-                                            class="lesson-item flex items-center gap-2 transition
-                                                {{ $isActive ? 'text-orange-600 font-semibold' : 'text-gray-600 hover:text-orange-600' }}"
-                                            data-lesson="{{ $lesson->id }}"
-                                            data-title="{{ $lesson->title }}"
-                                            data-content="{{ $lesson->content }}"
-                                            data-video="{{ $lesson->video_url }}"
-                                            data-pdf="{{ $lesson->pdf_file }}"
-                                        >
-                                            @if($isActive)
-                                                ▶
-                                            @else
-                                                ☐
-                                            @endif
 
-                                            {{ $lesson->title }}
-                                        </a>
+                                        @if($isUnlocked)
+
+                                            {{-- LECCIÓN DISPONIBLE --}}
+                                            <a
+                                                href="#"
+                                                class="lesson-item group flex items-center gap-3
+                                                    px-3 py-2.5 rounded-xl
+                                                    transition-all duration-200
+                                                    {{ $isActive
+                                                        ? 'bg-orange-50 text-orange-600 font-semibold'
+                                                        : 'text-gray-600 hover:bg-gray-50 hover:text-orange-600'
+                                                    }}"
+                                                data-lesson="{{ $lesson->id }}"
+                                                data-title="{{ $lesson->title }}"
+                                                data-content="{{ $lesson->content }}"
+                                                data-video="{{ $lesson->video_url }}"
+                                                data-pdf="{{ $lesson->pdf_file }}"
+                                            >
+
+                                                {{-- Indicador --}}
+                                                <span class="flex-shrink-0 flex items-center justify-center
+                                                            w-6 h-6 rounded-lg text-xs
+                                                            {{ $isActive
+                                                                ? 'bg-orange-100 text-orange-600'
+                                                                : ($isCompleted
+                                                                    ? 'bg-green-50 text-green-600'
+                                                                    : 'bg-gray-100 text-gray-500 group-hover:bg-orange-50 group-hover:text-orange-600')
+                                                            }}">
+
+                                                    @if($isCompleted)
+                                                        ✓
+                                                    @elseif($isActive || $isNext)
+                                                        ▶
+                                                    @else
+                                                        ○
+                                                    @endif
+
+                                                </span>
+
+                                                <span class="leading-snug">
+                                                    {{ $lesson->title }}
+                                                </span>
+
+                                            </a>
+
+                                        @else
+
+                                            {{-- LECCIÓN BLOQUEADA --}}
+                                            <div
+                                                class="flex items-center gap-3
+                                                    px-3 py-2.5 rounded-xl
+                                                    text-gray-400
+                                                    cursor-not-allowed
+                                                    select-none"
+                                                title="Completa la lección anterior para continuar"
+                                            >
+
+                                                {{-- Candado --}}
+                                                <span class="flex-shrink-0 flex items-center justify-center
+                                                            w-6 h-6 rounded-lg
+                                                            bg-gray-100 text-gray-400 text-xs">
+                                                    🔒
+                                                </span>
+
+                                                <span class="leading-snug">
+                                                    {{ $lesson->title }}
+                                                </span>
+
+                                            </div>
+
+                                        @endif
+
                                     </li>
 
                                 @empty
+
                                     <li class="text-gray-400 italic">
                                         (Este módulo aún no tiene lecciones)
                                     </li>
+
                                 @endforelse
                             </ul>
 
                         </div>
+
                     @empty
+
                         <p class="text-gray-400 italic">
                             Este curso aún no tiene módulos creados.
                         </p>
+
                     @endforelse                   
 
                 </div>
@@ -102,35 +235,142 @@
 
             {{-- Área de contenido de la lección --}}
             <main class="lg:col-span-3">
-                <div class="brand-card bg-white p-8">
+                <div class="brand-card relative bg-white border border-gray-200 rounded-2xl shadow-sm p-8 overflow-hidden">
 
-                    <h2 id="lesson-title" class="text-xl font-bold mb-4">
-                        Selecciona una lección
-                    </h2>
+                    {{-- Acento de marca --}}
+                    <div class="absolute top-0 left-0 w-full h-1"
+                        style="background: var(--brand);">
+                    </div>
+
+                    {{-- Encabezado de la lección --}}
+                    <div class="mb-6">
+
+                        <p class="text-sm font-semibold text-orange-600 mb-2">
+                            Lección actual
+                        </p>
+
+                        <h2 id="lesson-title"
+                            class="text-2xl font-bold text-gray-900 leading-tight">
+                            Selecciona una lección
+                        </h2>
+
+                    </div>
 
                     <div id="lesson-video" class="w-full aspect-video bg-gray-200 rounded-lg flex items-center justify-center mb-6">
                         <span class="text-gray-500">Aquí se mostrará el video</span>
                     </div>
 
-                    <div id="lesson-content" class="text-gray-700 mb-6 leading-relaxed">
-                        El contenido de la lección aparecerá aquí.
+                    {{-- Descripción de la lección --}}
+                    <div class="mt-7 mb-8">
+
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-1 h-5 rounded-full"
+                                style="background: var(--brand);">
+                            </span>
+
+                            <h3 class="font-semibold text-gray-900">
+                                Acerca de esta lección
+                            </h3>
+                        </div>
+
+                        <div id="lesson-content"
+                            class="text-gray-600 leading-relaxed">
+                            El contenido de la lección aparecerá aquí.
+                        </div>
+
                     </div>
 
-                    <div id="pdf-container" class="hidden mt-6">
-                        <h3 class="font-semibold mb-2 text-gray-700">Material de la lección</h3>
+                    {{-- Material complementario --}}
+                    <div id="pdf-container" class="hidden mt-8 pt-7 border-t border-gray-100">
 
-                        <iframe id="pdf-viewer"
-                            class="w-full h-[500px] rounded-lg border"
-                            src=""
-                        ></iframe>
+                        <div class="mb-4">
+                            <p class="text-sm font-semibold text-orange-600 mb-1">
+                                Material complementario
+                            </p>
 
-                        <a id="lesson-pdf" href="#" target="_blank"
-                        class="inline-block mt-3 text-sm font-semibold text-orange-600 hover:underline">
-                            Descargar PDF
-                        </a>
+                            <h3 class="text-lg font-bold text-gray-900">
+                                Material de la lección
+                            </h3>
+
+                            <p class="text-sm text-gray-500 mt-1">
+                                Revisa o descarga el documento de apoyo asociado a esta lección.
+                            </p>
+                        </div>
+
+                        {{-- Tarjeta del documento --}}
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between
+                                    gap-5 p-5
+                                    border border-gray-200
+                                    rounded-2xl
+                                    bg-gray-50">
+
+                            {{-- Información del documento --}}
+                            <div class="flex items-center gap-4">
+
+                                <div class="flex items-center justify-center
+                                            w-12 h-12
+                                            rounded-xl
+                                            bg-orange-100
+                                            text-orange-600
+                                            text-xl
+                                            flex-shrink-0">
+                                    📄
+                                </div>
+
+                                <div>
+                                    <p class="font-semibold text-gray-900">
+                                        Documento de apoyo
+                                    </p>
+
+                                    <p class="text-sm text-gray-500 mt-1">
+                                        Material complementario en formato PDF
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            {{-- Acciones --}}
+                            <div class="flex flex-wrap gap-3">
+
+                                <a
+                                    id="lesson-pdf-view"
+                                    href="#"
+                                    target="_blank"
+                                    class="inline-flex items-center justify-center
+                                        px-4 py-2.5
+                                        rounded-xl
+                                        border border-gray-300
+                                        bg-white
+                                        text-sm font-semibold text-gray-700
+                                        transition-all duration-200
+                                        hover:bg-gray-100 hover:-translate-y-0.5">
+                                    Ver PDF
+                                </a>
+
+                                <a
+                                    id="lesson-pdf"
+                                    href="#"
+                                    download
+                                    class="inline-flex items-center justify-center gap-2
+                                        px-4 py-2.5
+                                        rounded-xl
+                                        border border-orange-200
+                                        bg-white
+                                        text-sm font-semibold text-orange-600
+                                        transition-all duration-200
+                                        hover:bg-orange-50 hover:-translate-y-0.5">
+
+                                    <span>↓</span>
+                                    Descargar PDF
+                                </a>
+
+                            </div>
+
+                        </div>
+
                     </div>
 
-                    <form method="POST" id="complete-form" action="">
+                    <form method="POST" id="complete-form" action="" class="mt-8">
                         @csrf
 
                         <button
@@ -238,18 +478,22 @@
 
                 // PDF
                 const pdfContainer = document.getElementById('pdf-container');
-                const pdfViewer = document.getElementById('pdf-viewer');
+                const pdfViewLink = document.getElementById('lesson-pdf-view');
                 const pdfLink = document.getElementById('lesson-pdf');
 
                 if (pdf) {
                     const pdfUrl = `/storage/${pdf}`;
-                    pdfViewer.src = pdfUrl;
+
+                    pdfViewLink.href = pdfUrl;
                     pdfLink.href = pdfUrl;
+
                     pdfContainer.classList.remove('hidden');
                 } else {
                     pdfContainer.classList.add('hidden');
                 }
+
             });
+            
         });
 
         // YouTube ID

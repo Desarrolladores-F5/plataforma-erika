@@ -10,14 +10,20 @@ class LessonProgressController extends Controller
 {
     public function store(Request $request, Course $course, Lesson $lesson)
     {
-        // 🔐 1. Validar que la lección pertenece al curso
+        // ==========================================================
+        // 1. VALIDAR QUE LA LECCIÓN PERTENECE AL CURSO
+        // ==========================================================
+
         if (!$lesson->module || $lesson->module->course_id !== $course->id) {
             abort(404);
         }
 
         $user = $request->user();
 
-        // 🎟️ 2. Validar acceso del usuario al curso (si no es lección preview)
+        // ==========================================================
+        // 2. VALIDAR ACCESO DEL USUARIO AL CURSO
+        // ==========================================================
+
         $userHasAccess = $user->orders()
             ->where('course_id', $course->id)
             ->where('status', 'pagado')
@@ -27,9 +33,66 @@ class LessonProgressController extends Controller
             abort(403);
         }
 
-        // ✅ 3. Marcar lección como completada sin duplicar registros
+        // ==========================================================
+        // 3. OBTENER TODAS LAS LECCIONES EN ORDEN PEDAGÓGICO
+        // ==========================================================
+
+        $course->load([
+            'modules.lessons' => function ($query) {
+                $query->orderBy('order');
+            }
+        ]);
+
+        $allLessons = $course->modules
+            ->flatMap(function ($module) {
+                return $module->lessons;
+            })
+            ->values();
+
+        $lessonIds = $allLessons->pluck('id');
+
+        // ==========================================================
+        // 4. OBTENER LAS LECCIONES COMPLETADAS POR EL USUARIO
+        // ==========================================================
+
+        $completedLessonIds = $user->lessons()
+            ->whereIn('lessons.id', $lessonIds)
+            ->whereNotNull('lesson_user.completed_at')
+            ->pluck('lessons.id');
+
+        // ==========================================================
+        // 5. DETERMINAR LA SIGUIENTE LECCIÓN PERMITIDA
+        // ==========================================================
+
+        $nextLesson = $allLessons->first(function ($courseLesson) use ($completedLessonIds) {
+            return !$completedLessonIds->contains($courseLesson->id);
+        });
+
+        $nextLessonId = $nextLesson?->id;
+
+        // ==========================================================
+        // 6. PROTEGER EL AVANCE SECUENCIAL
+        // ==========================================================
+
+        $lessonAlreadyCompleted = $completedLessonIds->contains($lesson->id);
+
+        // Permitimos completar solamente:
+        // - una lección que ya estaba completada, o
+        // - la siguiente lección que corresponde realizar.
+        if (!$lessonAlreadyCompleted && $lesson->id !== $nextLessonId) {
+            return redirect()
+                ->route('curso.ver', $course->slug)
+                ->with('error', 'Debes completar la lección anterior antes de continuar.');
+        }
+
+        // ==========================================================
+        // 7. MARCAR LA LECCIÓN COMO COMPLETADA
+        // ==========================================================
+
         $user->lessons()->syncWithoutDetaching([
-            $lesson->id => ['completed_at' => now()]
+            $lesson->id => [
+                'completed_at' => now()
+            ]
         ]);
 
         return redirect()

@@ -153,6 +153,7 @@ Route::middleware(['auth', 'role:admin'])
 
     });
 
+// ✅ Vista de lección (alumno)
 Route::get('/curso/{course:slug}/leccion/{lesson}', [LessonViewController::class, 'show'])
     ->name('lesson.show');
 
